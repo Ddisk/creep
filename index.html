@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
+
+<meta name="googlebot" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
+
+<title>軸のアンバランスと釣り合い等級</title>
+
+<style>
+
+*{
+
+  box-sizing:border-box;
+
+}
+
+html{
+
+  scroll-behavior:smooth;
+
+}
+
+body{
+
+  margin:0;
+
+  font-family:
+
+    -apple-system,
+
+    BlinkMacSystemFont,
+
+    "Segoe UI",
+
+    "Hiragino Kaku Gothic ProN",
+
+    "Yu Gothic",
+
+    Meiryo,
+
+    sans-serif;
+
+  background:#f5f7fb;
+
+  color:#1f2937;
+
+  line-height:1.75;
+
+}
+
+main{
+
+  max-width:980px;
+
+  margin:0 auto;
+
+  padding:18px;
+
+}
+
+.hero{
+
+  background:#fff;
+
+  border:1px solid #dbe3ef;
+
+  padding:28px;
+
+  margin:14px 0 18px;
+
+  box-shadow:0 8px 24px rgba(15,23,42,.05);
+
+}
+
+h1{
+
+  margin:0 0 10px;
+
+  font-size:clamp(28px,5vw,46px);
+
+  line-height:1.2;
+
+}
+
+.lead{
+
+  font-size:1.05rem;
+
+  color:#475569;
+
+  margin:0;
+
+}
+
+.section{
+
+  background:#fff;
+
+  border:1px solid #dbe3ef;
+
+  margin:16px 0;
+
+  padding:24px;
+
+  box-shadow:0 6px 20px rgba(15,23,42,.04);
+
+}
+
+h2{
+
+  margin-top:0;
+
+  font-size:1.55rem;
+
+}
+
+h3{
+
+  margin-bottom:8px;
+
+}
+
+.eq{
+
+  font-family:
+
+    ui-monospace,
+
+    SFMono-Regular,
+
+    Menlo,
+
+    Consolas,
+
+    monospace;
+
+  background:#f8fafc;
+
+  border-left:4px solid #64748b;
+
+  padding:14px 16px;
+
+  margin:14px 0;
+
+  overflow:auto;
+
+  font-size:1.05rem;
+
+}
+
+.note{
+
+  background:#fff8e1;
+
+  border:1px solid #f3d58b;
+
+  padding:14px 16px;
+
+  margin:14px 0;
+
+}
+
+.grid{
+
+  display:grid;
+
+  grid-template-columns:repeat(2,minmax(0,1fr));
+
+  gap:16px;
+
+}
+
+.card{
+
+  border:1px solid #dbe3ef;
+
+  padding:16px;
+
+  background:#fbfdff;
+
+}
+
+.diagram{
+
+  margin:18px 0;
+
+  padding:18px;
+
+  border:1px dashed #94a3b8;
+
+  background:#f8fafc;
+
+  overflow:auto;
+
+}
+
+.rotor{
+
+  position:relative;
+
+  width:min(360px,90vw);
+
+  height:220px;
+
+  margin:0 auto;
+
+}
+
+.circle{
+
+  position:absolute;
+
+  width:180px;
+
+  height:180px;
+
+  border:3px solid #334155;
+
+  border-radius:50%;
+
+  left:50%;
+
+  top:50%;
+
+  transform:translate(-50%,-50%);
+
+  background:#fff;
+
+}
+
+.center,
+
+.cg{
+
+  position:absolute;
+
+  width:14px;
+
+  height:14px;
+
+  border-radius:50%;
+
+  top:50%;
+
+  transform:translate(-50%,-50%);
+
+}
+
+.center{
+
+  left:50%;
+
+  background:#111827;
+
+}
+
+.cg{
+
+  left:62%;
+
+  background:#b45309;
+
+}
+
+.line{
+
+  position:absolute;
+
+  height:2px;
+
+  background:#64748b;
+
+  top:50%;
+
+  left:50%;
+
+  width:12%;
+
+  transform:translateY(-50%);
+
+}
+
+.lab{
+
+  position:absolute;
+
+  font-size:.9rem;
+
+  white-space:nowrap;
+
+}
+
+.centerlab{
+
+  left:30%;
+
+  top:52%;
+
+}
+
+.cglab{
+
+  left:64%;
+
+  top:41%;
+
+}
+
+.elab{
+
+  left:54%;
+
+  top:54%;
+
+}
+
+.controls{
+
+  display:grid;
+
+  grid-template-columns:repeat(3,minmax(0,1fr));
+
+  gap:12px;
+
+  margin-top:16px;
+
+}
+
+label{
+
+  display:block;
+
+  font-size:.9rem;
+
+  color:#475569;
+
+  margin-bottom:5px;
+
+}
+
+input,
+
+select{
+
+  width:100%;
+
+  padding:10px 12px;
+
+  border:1px solid #cbd5e1;
+
+  background:#fff;
+
+  font-size:1rem;
+
+  border-radius:0;
+
+}
+
+.results{
+
+  display:grid;
+
+  grid-template-columns:repeat(3,minmax(0,1fr));
+
+  gap:12px;
+
+  margin-top:16px;
+
+}
+
+.result{
+
+  border:1px solid #cbd5e1;
+
+  background:#f8fafc;
+
+  padding:14px;
+
+}
+
+.result b{
+
+  display:block;
+
+  font-size:1.25rem;
+
+  margin-top:4px;
+
+}
+
+.table-wrap{
+
+  overflow:auto;
+
+}
+
+table{
+
+  width:100%;
+
+  border-collapse:collapse;
+
+  min-width:560px;
+
+}
+
+th,
+
+td{
+
+  border:1px solid #cbd5e1;
+
+  padding:10px;
+
+  text-align:center;
+
+}
+
+th{
+
+  background:#f1f5f9;
+
+}
+
+.flow{
+
+  font-size:1.15rem;
+
+  text-align:center;
+
+  font-weight:700;
+
+  letter-spacing:.03em;
+
+  padding:14px;
+
+  background:#eef2ff;
+
+  border:1px solid #c7d2fe;
+
+}
+
+.small{
+
+  font-size:.9rem;
+
+  color:#64748b;
+
+}
+
+.creep-flow{
+
+  text-align:center;
+
+  font-weight:700;
+
+  padding:16px;
+
+  border:1px solid #cbd5e1;
+
+  background:#f8fafc;
+
+  line-height:2;
+
+}
+
+footer{
+
+  color:#64748b;
+
+  font-size:.85rem;
+
+  text-align:center;
+
+  padding:24px 0 36px;
+
+}
+
+@media(max-width:720px){
+
+  .grid{
+
+    grid-template-columns:1fr;
+
+  }
+
+  .controls{
+
+    grid-template-columns:1fr;
+
+  }
+
+  .results{
+
+    grid-template-columns:1fr;
+
+  }
+
+  .section,
+
+  .hero{
+
+    padding:18px;
+
+  }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<main>
+
+<section class="hero">
+
+<h1>軸のアンバランスと釣り合い等級</h1>
+
+<p class="lead">
+
+回転中心と重心のずれから、
+
+偏心量・不釣り合い量・遠心力・釣り合い等級G、
+
+さらに軸受クリープとの関係までを一続きで理解するための資料です。
+
+</p>
+
+</section>
+
+<section class="section">
+
+<h2>1. アンバランスとは</h2>
+
+<p>
+
+回転体の
+
+<strong>回転中心</strong>
+
+と
+
+<strong>重心</strong>
+
+が一致していない状態をアンバランスと考えます。
+
+</p>
+
+<p>
+
+重心が回転中心からずれていると、
+
+回転したときに遠心力が発生し、
+
+振動や軸受への荷重増加の原因になります。
+
+</p>
+
+<div class="diagram">
+
+<div class="rotor">
+
+<div class="circle"></div>
+
+<div class="center"></div>
+
+<div class="cg"></div>
+
+<div class="line"></div>
+
+<div class="lab centerlab">
+
+回転中心
+
+</div>
+
+<div class="lab cglab">
+
+重心
+
+</div>
+
+<div class="lab elab">
+
+偏心 e
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="section">
+
+<h2>2. 偏心量 e</h2>
+
+<p>
+
+回転中心から重心までの距離を
+
+<strong>偏心量 e</strong>
+
+とします。
+
+</p>
+
+<div class="eq">
+
+e = 回転中心と重心のずれ [mm]
+
+</div>
+
+<p>
+
+偏心量が大きいほどアンバランスは大きくなります。
+
+ただし、実際に発生する力は質量や回転速度にも左右されます。
+
+</p>
+
+</section>
+
+<section class="section">
+
+<h2>3. 不釣り合い量 U</h2>
+
+<p>
+
+アンバランスの大きさは、
+
+質量と偏心量の積で表すことができます。
+
+</p>
+
+<div class="eq">
+
+U = m × e
+
+</div>
+
+<p>
+
+ここで、
+
+mは回転体質量、
+
+eは偏心量です。
+
+</p>
+
+<p>
+
+不釣り合い量の単位には
+
+g·mm や g·cm などが使用されます。
+
+</p>
+
+<div class="card">
+
+<b>例</b>
+
+<br><br>
+
+質量 10 kg
+
+<br>
+
+偏心量 0.01 mm
+
+<br><br>
+
+U = 10 × 0.01
+
+<br>
+
+= 0.1 kg·mm
+
+<br>
+
+= 100 g·mm
+
+<br>
+
+= 10 g·cm
+
+</div>
+
+</section>
+
+<section class="section">
+
+<h2>4. 回転すると遠心力が発生する</h2>
+
+<p>
+
+偏心した質量が回転すると、
+
+アンバランスによる遠心力が発生します。
+
+</p>
+
+<div class="eq">
+
+F = m × e × ω²
+
+</div>
+
+<p>
+
+それぞれ、
+
+</p>
+
+<div class="card">
+
+m ：回転体質量 [kg]
+
+<br>
+
+e ：偏心量 [m]
+
+<br>
+
+ω ：角速度 [rad/s]
+
+<br>
+
+F ：遠心力 [N]
+
+</div>
+
+<p>
+
+角速度 ω は、
+
+回転数 n [rpm] から求められます。
+
+</p>
+
+<div class="eq">
+
+ω = 2πn / 60
+
+</div>
+
+<div class="note">
+
+<strong>ポイント</strong>
+
+<br>
+
+遠心力は回転速度の
+
+<strong>2乗</strong>
+
+に比例します。
+
+<br>
+
+そのため、
+
+回転数が2倍になると、
+
+同じ偏心量でも遠心力は約4倍になります。
+
+</div>
+
+</section>
+
+<section class="section">
+
+<h2>5. 釣り合い等級 G とは</h2>
+
+<p>
+
+釣り合い等級 G は、
+
+回転体にどの程度の残留アンバランスを許容するかを表す指標です。
+
+</p>
+
+<div class="eq">
+
+G = e × ω
+
+</div>
+
+<p>
+
+単位は
+
+<strong>mm/s</strong>
+
+です。
+
+</p>
+
+<p>
+
+G値が小さいほど、
+
+より厳しいバランス精度が要求されます。
+
+</p>
+
+<div class="note">
+
+<strong>注意</strong>
+
+<br>
+
+G6.3だからといって、
+
+偏心量が6.3 mmという意味ではありません。
+
+<br><br>
+
+G値と回転速度から、
+
+許容される比不釣り合い量 e を求めます。
+
+</div>
+
+</section>
+
+<section class="section">
+
+<h2>6. G値から許容偏心量を求める</h2>
+
+<div class="eq">
+
+e = G / ω
+
+</div>
+
+<p>
+
+ω = 2πn / 60 を代入すると、
+
+回転数 n [rpm] を使用して
+
+次の形にできます。
+
+</p>
+
+<div class="eq">
+
+e [μm] = 9549 × G / n
+
+</div>
+
+<div class="card">
+
+<b>G6.3・6000 rpm の例</b>
+
+<br><br>
+
+e = 9549 × 6.3 / 6000
+
+<br><br>
+
+e ≒ 10.0 μm
+
+</div>
+
+<p>
+
+つまり、
+
+G6.3で6000 rpmの場合、
+
+許容される比不釣り合い量は
+
+約10 μmとなります。
+
+</p>
+
+</section>
+
+<section class="section">
+
+<h2>7. G2.5 と G6.3 の比較</h2>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+
+釣り合い等級
+
+</th>
+
+<th>
+
+回転数
+
+</th>
+
+<th>
+
+許容偏心量 e
+
+</th>
+
+<th>
+
+比較
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>
+
+G6.3
+
+</td>
+
+<td>
+
+6000 rpm
+
+</td>
+
+<td>
+
+約10.0 μm
+
+</td>
+
+<td>
+
+基準
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+G2.5
+
+</td>
+
+<td>
+
+6000 rpm
+
+</td>
+
+<td>
+
+約4.0 μm
+
+</td>
+
+<td>
+
+より厳しい
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<p>
+
+同じ回転数で比較すると、
+
+G値が小さいほど許容されるアンバランスも小さくなります。
+
+</p>
+
+</section>
+
+<section class="section">
+
+<h2>8. 寸法公差・軸振れとの違い</h2>
+
+<p>
+
+G6.3・6000 rpmから
+
+e ≒ 10 μm
+
+と求まっても、
+
+これは
+
+<strong>軸径の寸法公差を10 μm以下にする</strong>
+
+という意味ではありません。
+
+</p>
+
+<p>
+
+また、
+
+<strong>軸振れを10 μm以下にする</strong>
+
+という意味とも異なります。
+
+</p>
+
+<p>
+
+ここでの e は、
+
+ロータ全体に残る不釣り合い量を質量で割って、
+
+等価的な重心偏心として表した値です。
+
+</p>
+
+<div class="note">
+
+寸法公差・同軸度・振れなどは
+
+部品の形状や組立精度を表します。
+
+<br><br>
+
+一方、
+
+釣り合い等級は
+
+<strong>回転体全体の質量分布</strong>
+
+を評価するものです。
+
+</div>
+
+</section>
+
+<section class="section">
+
+<h2>9. アンバランスと軸受クリープ</h2>
+
+<p>
+
+アンバランスがあると、
+
+回転に伴って遠心力が発生します。
+
+</p>
+
+<p>
+
+この力は軸受にも伝わるため、
+
+軸受輪には回転荷重が作用する場合があります。
+
+</p>
+
+<div class="creep-flow">
+
+アンバランス
+
+<br>
+
+↓
+
+<br>
+
+遠心力が発生
+
+<br>
+
+↓
+
+<br>
+
+軸受に回転荷重が作用
+
+<br>
+
+↓
+
+<br>
+
+はめあいが不十分
+
+<br>
+
+↓
+
+<br>
+
+軸受輪と軸・ハウジングの間で相対すべり
+
+<br>
+
+↓
+
+<br>
+
+クリープ
+
+</div>
+
+<h3>クリープとは</h3>
+
+<p>
+
+軸受のクリープ
+
+（Bearing Creep）とは、
+
+軸受輪と軸またはハウジングのはめあい面で、
+
+軸受輪が徐々に円周方向へ移動する現象です。
+
+</p>
+
+<p>
+
+クリープが発生すると、
+
+はめあい面で摩耗や発熱が発生し、
+
+軸やハウジングを損傷する可能性があります。
+
+</p>
+
+<div class="note">
+
+<strong>重要</strong>
+
+<br>
+
+アンバランスがあるから必ずクリープが発生する、
+
+という意味ではありません。
+
+<br><br>
+
+アンバランスによる荷重、
+
+軸受荷重の方向、
+
+はめあい、
+
+材質、
+
+温度など複数の条件によって決まります。
+
+</div>
+
+</section>
+
+<section class="section">
+
+<h2>10. 自動計算</h2>
+
+<p>
+
+質量、
+
+回転数、
+
+釣り合い等級を入力すると、
+
+許容偏心量、
+
+許容不釣り合い量、
+
+その回転数でのアンバランス力を計算します。
+
+</p>
+
+<div class="controls">
+
+<div>
+
+<label for="mass">
+
+質量 m [kg]
+
+</label>
+
+<input
+
+id="mass"
+
+type="number"
+
+min="0"
+
+step="0.1"
+
+value="10"
+
+>
+
+</div>
+
+<div>
+
+<label for="rpm">
+
+回転数 n [rpm]
+
+</label>
+
+<input
+
+id="rpm"
+
+type="number"
+
+min="1"
+
+step="100"
+
+value="6000"
+
+>
+
+</div>
+
+<div>
+
+<label for="grade">
+
+釣り合い等級 G [mm/s]
+
+</label>
+
+<select id="grade">
+
+<option value="0.4">
+
+G0.4
+
+</option>
+
+<option value="1">
+
+G1
+
+</option>
+
+<option value="2.5">
+
+G2.5
+
+</option>
+
+<option value="6.3" selected>
+
+G6.3
+
+</option>
+
+<option value="16">
+
+G16
+
+</option>
+
+<option value="40">
+
+G40
+
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div class="results">
+
+<div class="result">
+
+許容偏心量 e
+
+<b id="eOut">
+
+-
+
+</b>
+
+<span class="small">
+
+μm
+
+</span>
+
+</div>
+
+<div class="result">
+
+許容不釣り合い量 U
+
+<b id="uOut">
+
+-
+
+</b>
+
+<span class="small">
+
+g·cm
+
+</span>
+
+</div>
+
+<div class="result">
+
+アンバランス力 F
+
+<b id="fOut">
+
+-
+
+</b>
+
+<span class="small">
+
+N
+
+</span>
+
+</div>
+
+</div>
+
+<p class="small">
+
+※ Fは、
+
+求めた許容偏心量が質量全体の等価偏心として作用すると仮定した計算値です。
+
+</p>
+
+</section>
+
+<section class="section">
+
+<h2>11. 全体のつながり</h2>
+
+<div class="flow">
+
+釣り合い等級 G
+
+→
+
+許容偏心 e
+
+→
+
+不釣り合い量 U
+
+→
+
+遠心力 F
+
+</div>
+
+<div
+
+class="grid"
+
+style="margin-top:16px"
+
+>
+
+<div class="card">
+
+<b>
+
+G → e
+
+</b>
+
+<br>
+
+e = G / ω
+
+</div>
+
+<div class="card">
+
+<b>
+
+e → U
+
+</b>
+
+<br>
+
+U = m × e
+
+</div>
+
+<div class="card">
+
+<b>
+
+e → F
+
+</b>
+
+<br>
+
+F = m × e × ω²
+
+</div>
+
+<div class="card">
+
+<b>
+
+回転数の影響
+
+</b>
+
+<br>
+
+F ∝ ω²
+
+</div>
+
+</div>
+
+</section>
+
+<footer>
+
+このページは学習・説明用です。
+
+<br>
+
+実設計では、
+
+対象機械に適用される規格、
+
+メーカー基準、
+
+ロータ構造、
+
+軸受条件、
+
+支持条件などを確認してください。
+
+</footer>
+
+</main>
+
+<script>
+
+const mass =
+
+document.getElementById('mass');
+
+const rpm =
+
+document.getElementById('rpm');
+
+const grade =
+
+document.getElementById('grade');
+
+const eOut =
+
+document.getElementById('eOut');
+
+const uOut =
+
+document.getElementById('uOut');
+
+const fOut =
+
+document.getElementById('fOut');
+
+function calc(){
+
+  const m =
+
+  parseFloat(mass.value);
+
+  const n =
+
+  parseFloat(rpm.value);
+
+  const G =
+
+  parseFloat(grade.value);
+
+  if(
+
+    !(m > 0) ||
+
+    !(n > 0) ||
+
+    !(G > 0)
+
+  ){
+
+    eOut.textContent = '-';
+
+    uOut.textContent = '-';
+
+    fOut.textContent = '-';
+
+    return;
+
+  }
+
+  const omega =
+
+  2 * Math.PI * n / 60;
+
+  const e_mm =
+
+  G / omega;
+
+  const e_um =
+
+  e_mm * 1000;
+
+  /*
+
+  kg・mm
+
+  ↓
+
+  g・cm
+
+  1 kg・mm
+
+  =
+
+  100 g・cm
+
+  */
+
+  const U_gcm =
+
+  m * e_mm * 100;
+
+  /*
+
+  mm → m
+
+  */
+
+  const e_m =
+
+  e_mm / 1000;
+
+  /*
+
+  遠心力
+
+  F = m e ω²
+
+  */
+
+  const F =
+
+  m * e_m * omega * omega;
+
+  eOut.textContent =
+
+  e_um.toFixed(2);
+
+  uOut.textContent =
+
+  U_gcm.toFixed(2);
+
+  fOut.textContent =
+
+  F.toFixed(2);
+
+}
+
+[
+
+  mass,
+
+  rpm,
+
+  grade
+
+]
+
+.forEach(
+
+  el =>
+
+  el.addEventListener(
+
+    'input',
+
+    calc
+
+  )
+
+);
+
+calc();
+
+</script>
+
+</body>
+
+</html>
