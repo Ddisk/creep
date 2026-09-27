@@ -9,751 +9,446 @@
 <style>
 *{box-sizing:border-box}
 :root{
-  --bg:#eef2f7;
-  --paper:#ffffff;
-  --ink:#1f2937;
-  --sub:#64748b;
-  --line:#cbd5e1;
-  --blue:#2563eb;
-  --blue2:#dbeafe;
-  --green:#0f766e;
-  --warn:#fff8e1;
-  --warnline:#f3d58b;
+  --bg:#e9eef5;--paper:#fff;--ink:#202938;--sub:#64748b;
+  --line:#cbd5e1;--blue:#2563eb;--green:#0f766e;
+  --purple:#7c3aed;--red:#dc2626;--amber:#b45309;
+  --softblue:#eff6ff;--softgreen:#ecfdf5;--softpurple:#f5f3ff;
+  --softred:#fef2f2;--softamber:#fffbeb;
 }
-html{scroll-behavior:smooth}
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--ink);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
-}
-.deck{padding:18px 0 36px}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif}
+.deck{padding:16px 0 32px}
+.slide-shell{position:relative;margin:0 auto 16px}
 .slide{
-  width:min(96vw,960px);
-  aspect-ratio:4/3;
-  margin:0 auto 18px;
-  background:var(--paper);
-  border:1px solid #dbe3ef;
-  box-shadow:0 10px 28px rgba(15,23,42,.08);
-  padding:34px 40px;
-  overflow:hidden;
-  position:relative;
+  width:960px;height:720px;position:absolute;left:0;top:0;
+  transform-origin:top left;background:var(--paper);
+  border:1px solid #d9e1ec;box-shadow:0 8px 24px rgba(15,23,42,.08);
+  padding:28px 34px;overflow:hidden;
 }
-.slide h1,.slide h2,.slide h3,.slide p{margin-top:0}
-.slide h1{font-size:42px;line-height:1.15;margin-bottom:14px}
-.slide h2{font-size:28px;line-height:1.2;margin-bottom:16px}
-.slide h3{font-size:18px;margin-bottom:7px}
-.slide p,.slide li{font-size:17px;line-height:1.55}
-.slide.compact p,.slide.compact li{font-size:15px;line-height:1.45}
-.slide.tight p,.slide.tight li{font-size:14px;line-height:1.38}
-.kicker{font-size:16px;color:var(--blue);font-weight:700;margin-bottom:6px}
-.lead{font-size:22px!important;color:#475569;line-height:1.5!important}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.three{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.card{
-  border:1px solid var(--line);
-  background:#fbfdff;
-  padding:14px 16px;
-}
-.note{
-  border:1px solid var(--warnline);
-  background:var(--warn);
-  padding:12px 14px;
-}
+h1,h2,h3,p{margin-top:0}
+h1{font-size:34px;line-height:1.1;margin-bottom:12px}
+h2{font-size:25px;line-height:1.15;margin-bottom:13px}
+h3{font-size:16px;line-height:1.2;margin-bottom:5px}
+p,li{font-size:14px;line-height:1.42;margin-bottom:8px}
+.kicker{font-size:13px;color:var(--blue);font-weight:800;margin-bottom:5px}
+.lead{font-size:19px;line-height:1.45;color:#475569}
+.small{font-size:11px;color:var(--sub)}
+.blue{color:var(--blue);font-weight:800}.green{color:var(--green);font-weight:800}
+.purple{color:var(--purple);font-weight:800}.red{color:var(--red);font-weight:800}
+.amber{color:var(--amber);font-weight:800}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.two-45{display:grid;grid-template-columns:45% 55%;gap:14px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.card{border:1px solid var(--line);background:#fbfdff;padding:10px 12px}
+.note{border:1px solid #f2d58f;background:var(--softamber);padding:9px 11px}
+.flow{background:var(--softblue);border:1px solid #bfdbfe;padding:10px 12px;text-align:center;font-size:15px;font-weight:800;line-height:1.5}
 .eq{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-height:54px;
-  padding:8px 14px;
-  margin:10px 0;
-  border-left:4px solid #64748b;
-  background:#f8fafc;
+  display:flex;align-items:center;justify-content:center;
+  min-height:42px;padding:5px 9px;margin:6px 0;
+  background:#f8fafc;border-left:4px solid #64748b;
   font-family:"Times New Roman","Yu Mincho",serif;
-  font-size:25px;
-  line-height:1.25;
-  white-space:nowrap;
+  font-size:20px;line-height:1.08;white-space:nowrap;
 }
-.eq.small{font-size:20px}
-.frac{
-  display:inline-flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  vertical-align:middle;
-  line-height:1.05;
-  margin:0 .18em;
-}
-.frac .top{border-bottom:1.5px solid currentColor;padding:0 .20em .08em}
-.frac .bottom{padding:.08em .20em 0}
-.flow{
-  background:#eef2ff;
-  border:1px solid #c7d2fe;
-  padding:14px;
-  text-align:center;
-  font-weight:700;
-  font-size:18px;
-  line-height:1.65;
-}
-.unit{color:var(--sub);font-size:.85em}
-table{width:100%;border-collapse:collapse}
-th,td{border:1px solid var(--line);padding:7px 8px;text-align:center;font-size:14px}
+.eq.s{font-size:16px;min-height:34px}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.0;margin:0 .13em}
+.frac .top{border-bottom:1.4px solid currentColor;padding:0 .16em .05em}
+.frac .bottom{padding:.05em .16em 0}
+.unit{font-size:.84em;color:var(--sub)}
+.result{border:1px solid var(--line);background:#f8fafc;text-align:center;padding:8px;font-size:20px;font-weight:800}
+.page{position:absolute;right:16px;bottom:10px;font-size:10px;color:#94a3b8}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+th,td{border:1px solid var(--line);padding:4px 5px;font-size:11px;line-height:1.18;text-align:center}
 th{background:#f1f5f9}
-.result{
-  font-size:25px;
-  font-weight:800;
-  text-align:center;
-  padding:10px;
-  border:1px solid var(--line);
-  background:#f8fafc;
-}
-.page{
-  position:absolute;
-  right:24px;
-  bottom:16px;
-  color:#94a3b8;
-  font-size:12px;
-}
+ul{margin:4px 0 0 20px;padding:0}
 
-/* Diagram */
-.diagram{
-  position:relative;
-  height:360px;
-  margin-top:6px;
-  border:1px solid var(--line);
-  background:#fbfdff;
+/* small concept diagrams */
+.concept{
+  height:205px;position:relative;border:1px solid var(--line);background:#fbfdff;
 }
-.axis{
-  position:absolute;left:45px;right:35px;top:150px;
-  border-top:1px dashed #475569;
+.rotor{
+  position:absolute;width:130px;height:130px;border-radius:50%;
+  border:3px solid #475569;left:46%;top:50%;transform:translate(-50%,-50%);background:#fff;
 }
-.shaft{
-  position:absolute;left:70px;right:55px;top:143px;height:15px;
-  background:#a8b1bd;border:1px solid #64748b;
-}
-.part,.bearing{
-  position:absolute;
-  border:2px solid #475569;
-  background:#e5e7eb;
-}
-.bearing{width:64px;height:96px;top:102px;background:#dbeafe}
-#bnl{left:84px}
-#enc{left:172px;width:45px;height:78px;top:112px}
-#brake{left:245px;width:60px;height:100px;top:100px}
-#rotor{left:360px;width:220px;height:108px;top:96px}
-#bl{left:645px}
-#cust{left:770px;width:96px;height:108px;top:96px;background:#d1d5db}
-.dlabel{
-  position:absolute;transform:translateX(-50%);
-  font-size:13px;font-weight:700;white-space:nowrap;
-}
-.load{
-  position:absolute;width:2px;background:var(--blue);
-}
-.load:before{
-  content:"";position:absolute;left:-5px;top:-1px;
-  border-left:6px solid transparent;border-right:6px solid transparent;
-  border-bottom:10px solid var(--blue);
-}
-.llabel{
-  position:absolute;transform:translateX(-50%);
-  color:#1d4ed8;font-size:13px;font-weight:800;white-space:nowrap;
-}
-.reaction{
-  position:absolute;width:2px;height:55px;top:197px;background:var(--green);
-}
-.reaction:before{
-  content:"";position:absolute;left:-5px;top:-1px;
-  border-left:6px solid transparent;border-right:6px solid transparent;
-  border-bottom:10px solid var(--green);
-}
-.rlabel{
-  position:absolute;transform:translateX(-50%);top:249px;
-  color:var(--green);font-weight:800;font-size:13px;white-space:nowrap;
-}
-.dim{
-  position:absolute;height:1px;background:var(--blue);
-}
-.dim:before,.dim:after{
-  content:"";position:absolute;top:-4px;width:1px;height:9px;background:var(--blue);
-}
-.dim:before{left:0}.dim:after{right:0}
-.dimtxt{
-  position:absolute;transform:translateX(-50%);
-  color:#1d4ed8;font-size:12px;font-weight:700;white-space:nowrap;
-}
-.origin{
-  position:absolute;left:626px;top:318px;font-size:12px;font-weight:700;color:#475569
-}
-
-@media(max-width:800px){
-  .slide{padding:22px 24px}
-}
-@media print{
-  body{background:#fff}
-  .deck{padding:0}
-  .slide{
-    width:10in;
-    height:7.5in;
-    aspect-ratio:auto;
-    margin:0;
-    box-shadow:none;
-    border:none;
-    page-break-after:always;
-  }
-}
-</style>
-
-<style id="visual-enhance">
-:root{
-  --load:#2563eb;
-  --moment:#7c3aed;
-  --dim:#0f766e;
-  --key:#dc2626;
-  --softblue:#eff6ff;
-  --softgreen:#ecfdf5;
-  --softpurple:#f5f3ff;
-  --softred:#fef2f2;
-}
-.key-blue{color:var(--load);font-weight:800}
-.key-green{color:var(--dim);font-weight:800}
-.key-purple{color:var(--moment);font-weight:800}
-.key-red{color:var(--key);font-weight:800}
-.eq strong{color:var(--key)}
-.mini-visual{
-  position:relative;
-  height:185px;
-  border:1px solid var(--line);
-  background:#fbfdff;
-  overflow:hidden;
-}
-.rotor-circle{
-  position:absolute;
-  width:118px;height:118px;
-  border:3px solid #475569;border-radius:50%;
-  left:50%;top:50%;transform:translate(-50%,-50%);
-  background:white;
-}
-.axis-dot,.cg-dot{
-  position:absolute;width:12px;height:12px;border-radius:50%;
-  top:50%;transform:translate(-50%,-50%);
-}
-.axis-dot{left:50%;background:#111827}
-.cg-dot{left:63%;background:var(--key)}
-.radius-line{
-  position:absolute;left:50%;top:50%;width:13%;height:2px;background:var(--key)
-}
-.force-arrow{
-  position:absolute;left:63%;top:49%;width:86px;height:3px;background:var(--load);
-}
-.force-arrow:after{
-  content:"";position:absolute;right:-1px;top:-5px;
-  border-left:10px solid var(--load);
-  border-top:6px solid transparent;border-bottom:6px solid transparent;
-}
-.mini-label{
-  position:absolute;font-size:12px;font-weight:700;white-space:nowrap
-}
+.dot-axis,.dot-cg{position:absolute;width:12px;height:12px;border-radius:50%;top:50%;transform:translate(-50%,-50%)}
+.dot-axis{left:46%;background:#111827}.dot-cg{left:60%;background:var(--red)}
+.eradius{position:absolute;left:46%;top:50%;width:14%;height:2px;background:var(--red)}
+.farrow{position:absolute;left:60%;top:49%;width:100px;height:3px;background:var(--blue)}
+.farrow:after{content:"";position:absolute;right:-1px;top:-5px;border-left:11px solid var(--blue);border-top:6px solid transparent;border-bottom:6px solid transparent}
+.tag{position:absolute;font-size:12px;font-weight:700;white-space:nowrap}
 .ring{
-  position:absolute;width:126px;height:126px;border-radius:50%;
-  border:3px solid #475569;left:50%;top:50%;transform:translate(-50%,-50%);
-  background:white;
+  position:absolute;width:138px;height:138px;border-radius:50%;
+  border:3px solid #475569;left:46%;top:50%;transform:translate(-50%,-50%);background:#fff;
 }
 .ring:after{
-  content:"";position:absolute;width:42px;height:42px;border-radius:50%;
-  border:3px solid #475569;background:#fbfdff;
-  left:50%;top:50%;transform:translate(-50%,-50%);
+  content:"";position:absolute;width:48px;height:48px;border-radius:50%;
+  border:3px solid #475569;background:#fbfdff;left:50%;top:50%;transform:translate(-50%,-50%);
 }
-.diameter{
-  position:absolute;left:50%;top:22px;height:140px;width:1px;background:var(--dim);
-}
-.diameter:before,.diameter:after{
-  content:"";position:absolute;left:-4px;width:9px;height:1px;background:var(--dim);
-}
-.diameter:before{top:0}.diameter:after{bottom:0}
-.center-hole{
-  position:absolute;left:50%;top:71px;width:1px;height:42px;background:var(--moment);
-}
-.center-hole:before,.center-hole:after{
-  content:"";position:absolute;left:-4px;width:9px;height:1px;background:var(--moment);
-}
-.center-hole:before{top:0}.center-hole:after{bottom:0}
-.moment-sketch{
-  position:relative;height:180px;border:1px solid var(--line);background:#fbfdff;
-}
-.mbar{position:absolute;left:70px;right:70px;top:82px;height:10px;background:#9ca3af}
-.support{position:absolute;top:60px;width:18px;height:54px;background:#dbeafe;border:2px solid #475569}
-.marrow{position:absolute;width:2px;background:var(--load)}
-.marrow:before{content:"";position:absolute;left:-5px;top:-1px;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:10px solid var(--load)}
-.distline{position:absolute;height:1px;background:var(--dim)}
-.distline:before,.distline:after{content:"";position:absolute;top:-4px;width:1px;height:9px;background:var(--dim)}
-.distline:before{left:0}.distline:after{right:0}
-.legend-inline{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;margin-top:5px}
-.legend-inline span{display:inline-flex;align-items:center;gap:5px}
-.dot{width:10px;height:10px;display:inline-block}
-.dot.load{background:var(--load)} .dot.dim{background:var(--dim)} .dot.moment{background:var(--moment)}
-</style>
+.vd{position:absolute;left:46%;top:23px;height:158px;width:1px;background:var(--green)}
+.vd:before,.vd:after{content:"";position:absolute;left:-5px;width:11px;height:1px;background:var(--green)}
+.vd:before{top:0}.vd:after{bottom:0}
+.vdi{position:absolute;left:46%;top:79px;height:48px;width:1px;background:var(--purple)}
+.vdi:before,.vdi:after{content:"";position:absolute;left:-5px;width:11px;height:1px;background:var(--purple)}
+.vdi:before{top:0}.vdi:after{bottom:0}
 
+/* shaft diagram */
+.shaftbox{height:350px;position:relative;border:1px solid var(--line);background:#fbfdff}
+.axisline{position:absolute;left:38px;right:30px;top:143px;border-top:1px dashed #475569}
+.shaftline{position:absolute;left:60px;right:45px;top:137px;height:13px;background:#aab3bf;border:1px solid #64748b}
+.part,.bearing{position:absolute;border:2px solid #475569;background:#e5e7eb}
+.bearing{width:58px;height:88px;top:99px;background:#dbeafe}
+#bnl{left:85px}#enc{left:170px;width:42px;height:68px;top:109px}
+#brake{left:244px;width:56px;height:92px;top:97px}
+#rotor{left:355px;width:215px;height:104px;top:91px}
+#bl{left:640px}#cust{left:775px;width:92px;height:104px;top:91px;background:#d1d5db}
+.plabel{position:absolute;transform:translateX(-50%);font-size:11px;font-weight:800;white-space:nowrap}
+.loadarr{position:absolute;width:2px;background:var(--blue)}
+.loadarr:before{content:"";position:absolute;left:-5px;top:-1px;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:10px solid var(--blue)}
+.loadtxt{position:absolute;transform:translateX(-50%);font-size:11px;font-weight:800;color:var(--blue);white-space:nowrap}
+.react{position:absolute;width:2px;height:48px;top:188px;background:var(--green)}
+.react:before{content:"";position:absolute;left:-5px;top:-1px;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:10px solid var(--green)}
+.reacttxt{position:absolute;transform:translateX(-50%);font-size:11px;font-weight:800;color:var(--green);top:235px;white-space:nowrap}
+.dim{position:absolute;height:1px;background:var(--purple)}
+.dim:before,.dim:after{content:"";position:absolute;top:-4px;width:1px;height:9px;background:var(--purple)}
+.dim:before{left:0}.dim:after{right:0}
+.dimtxt{position:absolute;transform:translateX(-50%);font-size:10px;font-weight:800;color:var(--purple);white-space:nowrap}
+.origin{position:absolute;left:610px;top:321px;font-size:10px;font-weight:800;color:#475569}
+
+/* force balance sketch */
+.balance{height:190px;position:relative;border:1px solid var(--line);background:#fbfdff}
+.bar{position:absolute;left:65px;right:65px;top:86px;height:9px;background:#9ca3af}
+.sup{position:absolute;top:62px;width:16px;height:54px;background:#dbeafe;border:2px solid #475569}
+.barr{position:absolute;width:2px;background:var(--blue)}
+.barr:before{content:"";position:absolute;left:-5px;top:-1px;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:10px solid var(--blue)}
+.dist{position:absolute;height:1px;background:var(--purple)}
+.dist:before,.dist:after{content:"";position:absolute;top:-4px;width:1px;height:9px;background:var(--purple)}
+.dist:before{left:0}.dist:after{right:0}
+
+@media print{
+  body{background:#fff}.deck{padding:0}.slide-shell{width:10in!important;height:7.5in!important;margin:0}
+  .slide{transform:none!important;width:10in;height:7.5in;box-shadow:none;border:none;page-break-after:always}
+}
+</style>
 </head>
 <body>
 <div class="deck">
 
-<section class="slide">
-  <div class="kicker">モーター軸系</div>
-  <h1>クリープ</h1>
-  <p class="lead">アンバランス荷重から軸受荷重を求め、<br>負荷側・反負荷側の荷重とクリープの関係を整理する。</p>
+<div class="slide-shell"><section class="slide">
+<div class="kicker">モーター軸系</div>
+<h1>クリープ</h1>
+<p class="lead">アンバランス荷重から軸受荷重を求め、<br>負荷側・反負荷側の荷重とクリープの関係を整理する。</p>
+<div class="flow" style="margin-top:34px">アンバランス荷重 → F₁〜F₆ → モーメントの釣り合い → F<sub>L</sub>・F<sub>NL</sub> → クリープ検討</div>
+<div class="note" style="margin-top:24px">今回はスラスト荷重を考えず、すべて<span class="blue">軸に対して直角なラジアル荷重</span>として扱う。</div>
+<span class="page">1</span>
+</section></div>
 
-  <div class="flow" style="margin-top:42px">
-    アンバランス荷重
-    → 各部の荷重 F₁〜F₆
-    → モーメントの釣り合い
-    → F<sub>L</sub>・F<sub>NL</sub>
-    → クリープ検討
-  </div>
-
-  <div class="note" style="margin-top:32px">
-    今回はスラスト荷重を考えず、すべて軸に対して直角なラジアル荷重として扱う。
-  </div>
-  <span class="page">1</span>
-</section>
-
-<section class="slide compact">
-  <h2>1. アンバランス荷重とは</h2>
-  <div class="two">
-    <div>
-      <div class="mini-visual">
-        <div class="rotor-circle"></div>
-        <div class="axis-dot"></div>
-        <div class="cg-dot"></div>
-        <div class="radius-line"></div>
-        <div class="force-arrow"></div>
-        <div class="mini-label" style="left:44%;top:48%">中心軸</div>
-        <div class="mini-label key-red" style="left:64%;top:39%">重心</div>
-        <div class="mini-label key-red" style="left:54%;top:54%">e [m]</div>
-        <div class="mini-label key-blue" style="left:68%;top:52%">F [N]</div>
-      </div>
-      <p style="margin-top:8px">重心が中心軸から <span class="key-red">e</span> だけずれると、その重心が回転する。</p>
+<div class="slide-shell"><section class="slide">
+<h2>1. アンバランス荷重とは</h2>
+<div class="two">
+  <div>
+    <div class="concept">
+      <div class="rotor"></div><div class="dot-axis"></div><div class="dot-cg"></div>
+      <div class="eradius"></div><div class="farrow"></div>
+      <div class="tag" style="left:37%;top:48%">中心軸</div>
+      <div class="tag red" style="left:61%;top:39%">重心</div>
+      <div class="tag red" style="left:51%;top:54%">e [m]</div>
+      <div class="tag blue" style="left:68%;top:52%">F [N]</div>
     </div>
-    <div>
-      <h3>遠心力</h3>
-      <div class="eq">F = mrω²</div>
-      <p>m：質量 <span class="unit">[kg]</span><br>r：回転半径 <span class="unit">[m]</span><br>ω：角速度 <span class="unit">[rad/s]</span></p>
+    <p style="margin-top:8px">重心が中心軸から<span class="red"> e </span>だけずれ、その重心が回転する。</p>
+  </div>
+  <div>
+    <h3>一般的な遠心力</h3>
+    <div class="eq">F = mrω²</div>
+    <p>m：質量 <span class="unit">[kg]</span><br>r：回転半径 <span class="unit">[m]</span><br>ω：角速度 <span class="unit">[rad/s]</span></p>
+    <h3 style="margin-top:12px">アンバランスの場合</h3>
+    <div class="eq">F = meω²</div>
+    <p>e：中心軸から重心までの距離 <span class="unit">[m]</span></p>
+  </div>
+</div>
+<div class="note"><span class="blue">アンバランス荷重</span>＝質量と重心ずれが回転することで発生するラジアル方向の力。</div>
+<span class="page">2</span>
+</section></div>
 
-      <h3 style="margin-top:10px">アンバランスの場合</h3>
-      <div class="eq">F = meω²</div>
-      <p><span class="key-red">e</span>：中心軸から重心までの距離 <span class="unit">[m]</span></p>
+<div class="slide-shell"><section class="slide">
+<h2>2. 釣り合い等級 G とアンバランス荷重</h2>
+<div class="two">
+  <div>
+    <h3>釣り合い等級</h3>
+    <div class="eq">G = eω</div>
+    <div class="eq">e = <span class="frac"><span class="top">G</span><span class="bottom">ω</span></span></div>
+    <p>G：釣り合い等級 <span class="unit">[mm/s]</span><br>e：偏心量 <span class="unit">[mm]</span></p>
+  </div>
+  <div>
+    <h3>荷重へ変換</h3>
+    <div class="eq">F = meω²</div>
+    <div class="eq">F = mGω</div>
+    <div class="eq">ω = <span class="frac"><span class="top">2πN</span><span class="bottom">60</span></span></div>
+    <p>N：回転速度 <span class="unit">[min⁻¹]</span></p>
+  </div>
+</div>
+<div class="flow" style="margin-top:12px">質量 m <span class="unit">[kg]</span> ＋ 釣り合い等級 G <span class="unit">[m/s]</span> ＋ 角速度 ω <span class="unit">[rad/s]</span> → アンバランス荷重 F <span class="unit">[N]</span></div>
+<div class="note" style="margin-top:12px">F = mGω では、Gを <b>mm/s → m/s</b> に換算して使用する。</div>
+<span class="page">3</span>
+</section></div>
+
+<div class="slide-shell"><section class="slide">
+<h2>3. 客先負荷質量が未知の場合</h2>
+<div class="two-45">
+  <div>
+    <div class="concept">
+      <div class="ring"></div><div class="vd"></div><div class="vdi"></div>
+      <div class="tag green" style="left:58%;top:15%">外径 D [m]</div>
+      <div class="tag purple" style="left:57%;top:47%">内径 d [m]</div>
+      <div class="tag" style="left:8%;top:77%">長さ L [m]</div>
+      <div class="tag" style="left:8%;top:87%">密度 ρ [kg/m³]</div>
     </div>
+    <p style="margin-top:7px">客先負荷を、中央に軸穴を持つ<span class="green">円環</span>と仮定する。</p>
   </div>
-  <div class="note" style="margin-top:8px">
-    <span class="key-blue">アンバランス荷重</span>は、質量と重心ずれが回転することで発生するラジアル方向の力。
+  <div>
+    <h3>外径 D まで中実な円板</h3>
+    <div class="eq s">J₁ = <span class="frac"><span class="top">1</span><span class="bottom">2</span></span>M₁R₁²</div>
+    <div class="eq s">M₁ = πR₁²Lρ</div>
+    <div class="eq s">R₁ = <span class="frac"><span class="top">D</span><span class="bottom">2</span></span></div>
+    <div class="eq s">J₁ = <span class="frac"><span class="top">πLρD⁴</span><span class="bottom">32</span></span></div>
+    <h3 style="margin-top:7px">軸穴部分</h3>
+    <div class="eq s">J₂ = <span class="frac"><span class="top">πLρd⁴</span><span class="bottom">32</span></span></div>
   </div>
-  <span class="page">2</span>
-</section>
+</div>
+<div class="eq s">J<sub>L</sub> = J₁ - J₂ = <span class="frac"><span class="top">πLρ(D⁴ - d⁴)</span><span class="bottom">32</span></span></div>
+<span class="page">4</span>
+</section></div>
 
-<section class="slide">
-  <h2>2. 釣り合い等級 G とアンバランス荷重</h2>
-
-  <p>釣り合い等級は、偏心量 e と角速度 ω の積で表す。</p>
-  <div class="eq">G = eω</div>
-
-  <p>したがって、</p>
-  <div class="eq">
-    e =
-    <span class="frac"><span class="top">G</span><span class="bottom">ω</span></span>
+<div class="slide-shell"><section class="slide">
+<h2>4. 客先負荷の外径・質量・アンバランス荷重</h2>
+<div class="two">
+  <div class="card">
+    <h3>① 外径を逆算</h3>
+    <div class="eq">D = ⁴√( <span class="frac"><span class="top">32J<sub>L</sub></span><span class="bottom">πLρ</span></span> + d⁴ )</div>
+    <p>D：客先負荷外径 <span class="unit">[m]</span></p>
   </div>
-
-  <p>これを F = meω² に代入すると、</p>
-  <div class="eq">
-    F =
-    m ×
-    <span class="frac"><span class="top">G</span><span class="bottom">ω</span></span>
-    × ω²
-    = mGω
+  <div class="card">
+    <h3>② 質量を計算</h3>
+    <div class="eq">M<sub>C</sub> = <span class="frac"><span class="top">πLρ(D²-d²)</span><span class="bottom">4</span></span></div>
+    <p>M<sub>C</sub>：客先負荷質量 <span class="unit">[kg]</span></p>
   </div>
-
-  <div class="two" style="margin-top:18px">
-    <div class="card">
-      <b>釣り合い等級</b><br>
-      G <span class="unit">[mm/s]</span>
-    </div>
-    <div class="card">
-      <b>角速度</b>
-      <div class="eq small" style="margin-bottom:0">
-        ω =
-        <span class="frac"><span class="top">2πN</span><span class="bottom">60</span></span>
-      </div>
-      N：回転速度 <span class="unit">[min⁻¹]</span>
-    </div>
-  </div>
-
-  <div class="note" style="margin-top:16px">
-    Gを mm/s のまま使用する場合、F = mGω の計算では G を m/s に換算する。
-  </div>
-  <span class="page">3</span>
-</section>
-
-<section class="slide compact">
-  <h2>3. 客先負荷質量が未知の場合</h2>
-  <div class="two">
-    <div>
-      <div class="mini-visual">
-        <div class="ring"></div>
-        <div class="diameter"></div>
-        <div class="center-hole"></div>
-        <div class="mini-label key-green" style="left:58%;top:18%">外径 D [m]</div>
-        <div class="mini-label key-purple" style="left:56%;top:48%">内径 d [m]</div>
-        <div class="mini-label" style="left:8%;top:76%">長さ L [m]</div>
-        <div class="mini-label" style="left:8%;top:86%">密度 ρ [kg/m³]</div>
-      </div>
-      <p style="margin-top:7px">客先負荷を、中央に軸穴を持つ<span class="key-green">円環</span>として扱う。</p>
-    </div>
-    <div>
-      <h3>外径 D まで中実なら</h3>
-      <div class="eq small">J₁ = <span class="frac"><span class="top">1</span><span class="bottom">2</span></span>M₁R₁²</div>
-      <div class="eq small">M₁ = πR₁²Lρ</div>
-      <div class="eq small">R₁ = <span class="frac"><span class="top">D</span><span class="bottom">2</span></span></div>
-      <div class="eq small">J₁ = <span class="frac"><span class="top">πLρD⁴</span><span class="bottom">32</span></span></div>
-
-      <h3 style="margin-top:7px">軸穴部分</h3>
-      <div class="eq small">J₂ = <span class="frac"><span class="top">πLρd⁴</span><span class="bottom">32</span></span></div>
-    </div>
-  </div>
-  <div class="eq small">J<sub>L</sub> = J₁ - J₂ = <span class="frac"><span class="top">πLρ(D⁴-d⁴)</span><span class="bottom">32</span></span></div>
-  <span class="page">4</span>
-</section>
-
-<section class="slide compact">
-  <h2>4. 客先負荷の外径・質量・アンバランス荷重</h2>
-
-  <p>負荷イナーシャの式を D について解く。</p>
-  <div class="eq">
-    D =
-    ⁴√(
-    <span class="frac">
-      <span class="top">32J<sub>L</sub></span>
-      <span class="bottom">πLρ</span>
-    </span>
-    + d⁴ )
-  </div>
-
-  <p>求めた外径 D から、中央の穴を除いた実質量を求める。</p>
-  <div class="eq">
-    M<sub>C</sub> =
-    <span class="frac">
-      <span class="top">πLρ(D² - d²)</span>
-      <span class="bottom">4</span>
-    </span>
-  </div>
-
-  <p>客先負荷のアンバランス荷重は、</p>
+</div>
+<div class="card" style="margin-top:12px">
+  <h3>③ 客先アンバランス荷重</h3>
   <div class="eq">F₁ = M<sub>C</sub>Gω</div>
+  <p style="text-align:center;margin-bottom:0">F₁：客先アンバランス荷重 <span class="unit">[N]</span></p>
+</div>
+<div class="flow" style="margin-top:18px">J<sub>L</sub> → D → M<sub>C</sub> → F₁</div>
+<span class="page">5</span>
+</section></div>
 
-  <div class="three" style="margin-top:15px">
-    <div class="card">D, d, L <span class="unit">[m]</span></div>
-    <div class="card">M<sub>C</sub> <span class="unit">[kg]</span></div>
-    <div class="card">F₁ <span class="unit">[N]</span></div>
-  </div>
-  <span class="page">5</span>
-</section>
+<div class="slide-shell"><section class="slide">
+<h2>5. 軸系の荷重位置と寸法</h2>
+<div class="shaftbox">
+  <div class="shaftline"></div><div class="axisline"></div>
+  <div class="bearing" id="bnl"></div><div class="part" id="enc"></div><div class="part" id="brake"></div>
+  <div class="part" id="rotor"></div><div class="bearing" id="bl"></div><div class="part" id="cust"></div>
 
-<section class="slide compact">
-  <h2>5. 軸系の荷重位置と寸法</h2>
+  <div class="plabel" style="left:114px;top:55px">反負荷側軸受</div>
+  <div class="plabel" style="left:191px;top:68px">エンコーダ</div>
+  <div class="plabel" style="left:272px;top:55px">ブレーキ</div>
+  <div class="plabel" style="left:462px;top:55px">ローター</div>
+  <div class="plabel" style="left:669px;top:55px">負荷側軸受</div>
+  <div class="plabel" style="left:821px;top:55px">客先負荷</div>
 
-  <div class="diagram">
-    <div class="shaft"></div><div class="axis"></div>
-    <div class="bearing" id="bnl"></div>
-    <div class="part" id="enc"></div>
-    <div class="part" id="brake"></div>
-    <div class="part" id="rotor"></div>
-    <div class="bearing" id="bl"></div>
-    <div class="part" id="cust"></div>
+  <div class="loadarr" style="left:821px;top:28px;height:58px"></div><div class="loadtxt" style="left:821px;top:8px">F₁ [N]</div>
+  <div class="loadarr" style="left:548px;top:28px;height:58px"></div><div class="loadtxt" style="left:548px;top:8px">F₂ [N]</div>
+  <div class="loadarr" style="left:462px;top:28px;height:58px"></div><div class="loadtxt" style="left:462px;top:8px">F₃ [N]</div>
+  <div class="loadarr" style="left:380px;top:28px;height:58px"></div><div class="loadtxt" style="left:380px;top:8px">F₄ [N]</div>
+  <div class="loadarr" style="left:272px;top:28px;height:58px"></div><div class="loadtxt" style="left:272px;top:8px">F₅ [N]</div>
+  <div class="loadarr" style="left:191px;top:28px;height:58px"></div><div class="loadtxt" style="left:191px;top:8px">F₆ = 0</div>
 
-    <div class="dlabel" style="left:116px;top:58px">反負荷側軸受</div>
-    <div class="dlabel" style="left:194px;top:72px">エンコーダ</div>
-    <div class="dlabel" style="left:275px;top:58px">ブレーキ</div>
-    <div class="dlabel" style="left:470px;top:58px">ローター</div>
-    <div class="dlabel" style="left:677px;top:58px">負荷側軸受</div>
-    <div class="dlabel" style="left:818px;top:58px">客先負荷</div>
+  <div class="react" style="left:114px"></div><div class="reacttxt" style="left:114px">F<sub>NL</sub> [N]</div>
+  <div class="react" style="left:669px"></div><div class="reacttxt" style="left:669px">F<sub>L</sub> [N]</div>
 
-    <div class="load" style="left:818px;top:35px;height:55px"></div><div class="llabel" style="left:818px;top:8px">F₁ [N]</div>
-    <div class="load" style="left:555px;top:35px;height:55px"></div><div class="llabel" style="left:555px;top:8px">F₂ [N]</div>
-    <div class="load" style="left:470px;top:35px;height:55px"></div><div class="llabel" style="left:470px;top:8px">F₃ [N]</div>
-    <div class="load" style="left:385px;top:35px;height:55px"></div><div class="llabel" style="left:385px;top:8px">F₄ [N]</div>
-    <div class="load" style="left:275px;top:35px;height:55px"></div><div class="llabel" style="left:275px;top:8px">F₅ [N]</div>
-    <div class="load" style="left:194px;top:35px;height:55px"></div><div class="llabel" style="left:194px;top:8px">F₆ = 0</div>
+  <div class="dim" style="left:669px;top:217px;width:152px"></div><div class="dimtxt" style="left:745px;top:223px">l₁ [mm]</div>
+  <div class="dim" style="left:548px;top:235px;width:121px"></div><div class="dimtxt" style="left:608px;top:241px">l₂ [mm]</div>
+  <div class="dim" style="left:462px;top:253px;width:207px"></div><div class="dimtxt" style="left:565px;top:259px">l₃ [mm]</div>
+  <div class="dim" style="left:380px;top:271px;width:289px"></div><div class="dimtxt" style="left:524px;top:277px">l₄ [mm]</div>
+  <div class="dim" style="left:272px;top:289px;width:397px"></div><div class="dimtxt" style="left:470px;top:295px">l₅ [mm]</div>
+  <div class="dim" style="left:114px;top:307px;width:555px"></div><div class="dimtxt" style="left:391px;top:313px">l₇ [mm]</div>
+  <div class="origin">基準：負荷側軸受中心 x = 0</div>
+</div>
+<div class="three" style="margin-top:8px">
+  <div class="card"><span class="blue">青</span>：荷重 F <span class="unit">[N]</span></div>
+  <div class="card"><span class="purple">紫</span>：距離 l <span class="unit">[mm]</span></div>
+  <div class="card"><span class="green">緑</span>：軸受荷重</div>
+</div>
+<span class="page">6</span>
+</section></div>
 
-    <div class="reaction" style="left:116px"></div><div class="rlabel" style="left:116px">F<sub>NL</sub> [N]</div>
-    <div class="reaction" style="left:677px"></div><div class="rlabel" style="left:677px">F<sub>L</sub> [N]</div>
+<div class="slide-shell"><section class="slide">
+<h2>6. 各アンバランス荷重</h2>
+<div class="three">
+  <div class="card"><h3 class="blue">F₁：客先負荷</h3><div class="eq s">F₁ = M<sub>C</sub>Gω</div><p>F₁ <span class="unit">[N]</span></p></div>
+  <div class="card"><h3 class="blue">F₂：ローターL側</h3><div class="eq s">F₂ = Uω²</div><p>U：不釣り合い量 <span class="unit">[kg·m]</span></p></div>
+  <div class="card"><h3 class="blue">F₃：磁気</h3><p>磁気アンバランス荷重は既知値を使用。</p><p>F₃ <span class="unit">[N]</span></p></div>
+  <div class="card"><h3 class="blue">F₄：ローターNL側</h3><p>今回は負荷側と同じ。</p><div class="eq s">F₄ = F₂</div></div>
+  <div class="card"><h3 class="blue">F₅：ブレーキ</h3><div class="eq s">F₅ = M<sub>B</sub>Gω</div><p>M<sub>B</sub> <span class="unit">[kg]</span></p></div>
+  <div class="card"><h3 class="blue">F₆：エンコーダ</h3><p>今回はアンバランス荷重を無視。</p><div class="eq s">F₆ = 0 N</div></div>
+</div>
+<div class="note" style="margin-top:12px">ローターの不釣り合い量 U が既知なら、質量と偏心量を別々に求めず <b>F = Uω²</b> で荷重を求められる。</div>
+<span class="page">7</span>
+</section></div>
 
-    <div class="dim" style="left:677px;top:222px;width:141px"></div><div class="dimtxt" style="left:748px;top:228px">l₁ [mm]</div>
-    <div class="dim" style="left:555px;top:240px;width:122px"></div><div class="dimtxt" style="left:616px;top:246px">l₂ [mm]</div>
-    <div class="dim" style="left:470px;top:258px;width:207px"></div><div class="dimtxt" style="left:574px;top:264px">l₃ [mm]</div>
-    <div class="dim" style="left:385px;top:276px;width:292px"></div><div class="dimtxt" style="left:531px;top:282px">l₄ [mm]</div>
-    <div class="dim" style="left:275px;top:294px;width:402px"></div><div class="dimtxt" style="left:476px;top:300px">l₅ [mm]</div>
-    <div class="dim" style="left:116px;top:312px;width:561px"></div><div class="dimtxt" style="left:397px;top:318px">l₇ [mm]</div>
-
-    <div class="origin">基準：負荷側軸受中心 x = 0</div>
-  </div>
-
-  <p class="small" style="margin-top:8px">
-    すべての距離 l₁〜l₇ は、負荷側軸受中心からの距離として扱う。
-  </p>
-  <span class="page">6</span>
-</section>
-
-<section class="slide compact">
-  <h2>6. 各荷重の定義</h2>
-
-  <div class="two">
-    <div class="card">
-      <h3>F₁：客先負荷</h3>
-      <div class="eq small">F₁ = M<sub>C</sub>Gω</div>
-      <span class="unit">[N]</span>
-    </div>
-
-    <div class="card">
-      <h3>F₂：ローター負荷側</h3>
-      <p>不釣り合い量 U が既知の場合</p>
-      <div class="eq small">F₂ = Uω²</div>
-      U <span class="unit">[kg·m]</span> または換算前 <span class="unit">[g·cm]</span>
-    </div>
-
-    <div class="card">
-      <h3>F₃：磁気アンバランス</h3>
-      <p>既知の磁気アンバランス荷重を使用する。</p>
-      F₃ <span class="unit">[N]</span>
-    </div>
-
-    <div class="card">
-      <h3>F₄：ローター反負荷側</h3>
-      <p>今回は負荷側と同じとする。</p>
-      <div class="eq small">F₄ = F₂</div>
-    </div>
-
-    <div class="card">
-      <h3>F₅：ブレーキ</h3>
-      <div class="eq small">F₅ = M<sub>B</sub>Gω</div>
-      M<sub>B</sub> <span class="unit">[kg]</span>
-    </div>
-
-    <div class="card">
-      <h3>F₆：エンコーダ</h3>
-      <p>今回はアンバランス荷重を無視する。</p>
-      <div class="eq small">F₆ = 0 N</div>
+<div class="slide-shell"><section class="slide">
+<h2>7. L側軸受まわりのモーメントの釣り合い</h2>
+<div class="two">
+  <div>
+    <div class="balance">
+      <div class="bar"></div>
+      <div class="sup" style="left:72px"></div><div class="sup" style="right:72px"></div>
+      <div class="barr" style="left:156px;top:30px;height:48px"></div>
+      <div class="barr" style="left:238px;top:30px;height:48px"></div>
+      <div class="barr" style="left:320px;top:30px;height:48px"></div>
+      <div class="barr" style="left:402px;top:30px;height:48px"></div>
+      <div class="barr" style="left:505px;top:30px;height:48px"></div>
+      <div class="tag blue" style="left:147px;top:8px">F₅</div><div class="tag blue" style="left:229px;top:8px">F₄</div>
+      <div class="tag blue" style="left:311px;top:8px">F₃</div><div class="tag blue" style="left:393px;top:8px">F₂</div>
+      <div class="tag blue" style="left:496px;top:8px">F₁</div>
+      <div class="tag" style="left:45px;top:122px">NL側</div><div class="tag purple" style="right:28px;top:122px">L側基準</div>
+      <div class="dist" style="left:89px;top:151px;width:415px"></div>
+      <div class="tag purple" style="left:235px;top:158px">距離 l [mm] は全てL側軸受基準</div>
     </div>
   </div>
-  <span class="page">7</span>
-</section>
-
-<section class="slide compact">
-  <h2>7. L側軸受まわりのモーメントの釣り合い</h2>
-  <div class="two">
-    <div>
-      <div class="moment-sketch">
-        <div class="mbar"></div>
-        <div class="support" style="left:86px"></div>
-        <div class="support" style="right:86px"></div>
-
-        <div class="marrow" style="left:160px;top:28px;height:48px"></div>
-        <div class="marrow" style="left:245px;top:28px;height:48px"></div>
-        <div class="marrow" style="left:330px;top:28px;height:48px"></div>
-        <div class="marrow" style="left:415px;top:28px;height:48px"></div>
-        <div class="marrow" style="left:520px;top:28px;height:48px"></div>
-
-        <div class="mini-label key-blue" style="left:149px;top:8px">F₅</div>
-        <div class="mini-label key-blue" style="left:234px;top:8px">F₄</div>
-        <div class="mini-label key-blue" style="left:319px;top:8px">F₃</div>
-        <div class="mini-label key-blue" style="left:404px;top:8px">F₂</div>
-        <div class="mini-label key-blue" style="left:510px;top:8px">F₁</div>
-
-        <div class="mini-label" style="left:65px;top:118px">NL側</div>
-        <div class="mini-label key-purple" style="right:38px;top:118px">L側基準</div>
-
-        <div class="distline" style="left:104px;top:148px;width:415px"></div>
-        <div class="mini-label key-green" style="left:285px;top:153px">各 l [mm] はL側軸受からの距離</div>
-      </div>
-      <div class="legend-inline">
-        <span><i class="dot load"></i>荷重 F [N]</span>
-        <span><i class="dot dim"></i>距離 l [mm]</span>
-        <span><i class="dot moment"></i>L側基準</span>
-      </div>
-    </div>
-    <div>
-      <p>負荷側軸受中心を基準にモーメントを取る。</p>
-      <div class="eq small">F<sub>NL</sub>l₇ = F₂l₂ + F₃l₃ + F₄l₄ + F₅l₅ + F₆l₆ - F₁l₁</div>
-      <p>今回は F₆ = 0、F₄ = F₂。</p>
-      <div class="eq small">
-        F<sub>NL</sub> =
-        <span class="frac">
-          <span class="top">F₂l₂ + F₃l₃ + F₂l₄ + F₅l₅ - F₁l₁</span>
-          <span class="bottom">l₇</span>
-        </span>
-      </div>
-      <div class="note">客先負荷 F₁ はL側軸受の反対側にあるため、モーメントの向きが逆。</div>
-    </div>
+  <div>
+    <div class="eq s">F<sub>NL</sub>l₇ = F₂l₂ + F₃l₃ + F₄l₄ + F₅l₅ + F₆l₆ - F₁l₁</div>
+    <p>今回は F₆ = 0、F₄ = F₂。</p>
+    <div class="eq s">F<sub>NL</sub> = <span class="frac"><span class="top">F₂l₂ + F₃l₃ + F₂l₄ + F₅l₅ - F₁l₁</span><span class="bottom">l₇</span></span></div>
+    <div class="note">客先負荷 F₁ はL側軸受の反対側にあるため、モーメントの向きが逆になる。</div>
   </div>
-  <span class="page">8</span>
-</section>
+</div>
+<span class="page">8</span>
+</section></div>
 
-<section class="slide">
-  <h2>8. 力の釣り合い</h2>
-
-  <p>ラジアル方向の力の釣り合いより、</p>
-
-  <div class="eq">
-    F<sub>L</sub> + F<sub>NL</sub>
-    =
-    F₁ + F₂ + F₃ + F₄ + F₅
+<div class="slide-shell"><section class="slide">
+<h2>8. 力の釣り合い</h2>
+<div class="two">
+  <div>
+    <p>ラジアル方向の力の釣り合いより、</p>
+    <div class="eq">F<sub>L</sub> + F<sub>NL</sub> = F₁ + F₂ + F₃ + F₄ + F₅</div>
+    <p>したがって、負荷側軸受荷重は、</p>
+    <div class="eq">F<sub>L</sub> = F₁ + F₂ + F₃ + F₄ + F₅ - F<sub>NL</sub></div>
   </div>
-
-  <p>したがって、負荷側軸受荷重は、</p>
-
-  <div class="eq">
-    F<sub>L</sub>
-    =
-    F₁ + F₂ + F₃ + F₄ + F₅ - F<sub>NL</sub>
+  <div>
+    <div class="flow">モーメントの釣り合い<br>↓<br><span class="green">F<sub>NL</sub></span> を求める<br>↓<br>力の釣り合い<br>↓<br><span class="green">F<sub>L</sub></span> を求める</div>
   </div>
+</div>
+<div class="two" style="margin-top:18px">
+  <div class="result">F<sub>L</sub><br><span class="unit">負荷側軸受荷重 [N]</span></div>
+  <div class="result">F<sub>NL</sub><br><span class="unit">反負荷側軸受荷重 [N]</span></div>
+</div>
+<span class="page">9</span>
+</section></div>
 
-  <div class="two" style="margin-top:28px">
-    <div class="result">F<sub>L</sub><br><span class="unit">負荷側軸受荷重 [N]</span></div>
-    <div class="result">F<sub>NL</sub><br><span class="unit">反負荷側軸受荷重 [N]</span></div>
+<div class="slide-shell"><section class="slide">
+<h2>9. クリープとの関係</h2>
+<div class="flow">アンバランス荷重 → F<sub>L</sub>・F<sub>NL</sub> → 軸受輪のラジアル荷重 → はめあい面 → 相対すべり → クリープ</div>
+<div class="two" style="margin-top:18px">
+  <div class="card">
+    <h3>クリープとは</h3>
+    <p>軸受輪と軸またはハウジングのはめあい面で、軸受輪が円周方向に少しずつ移動する現象。</p>
   </div>
-  <span class="page">9</span>
-</section>
-
-<section class="slide compact">
-  <h2>9. クリープとの関係</h2>
-
-  <div class="flow">
-    各部のアンバランス荷重
-    → F<sub>L</sub>・F<sub>NL</sub>
-    → 軸受輪にラジアル荷重
-    → はめあい面に作用
-    → 条件によって相対すべり
-    → クリープ
+  <div class="card">
+    <h3>今回の位置づけ</h3>
+    <p>アンバランス荷重から軸受荷重を求め、軸受にどの程度のラジアル荷重が作用するかを整理する。</p>
   </div>
+</div>
+<div class="note" style="margin-top:16px">アンバランス荷重だけでクリープ発生が決まるわけではない。はめあい、回転荷重、材質、温度なども合わせて評価する。</div>
+<span class="page">10</span>
+</section></div>
 
-  <div class="two" style="margin-top:24px">
-    <div class="card">
-      <h3>クリープとは</h3>
-      <p>軸受輪と軸またはハウジングのはめあい面で、軸受輪が円周方向に少しずつ移動する現象。</p>
-    </div>
-    <div class="card">
-      <h3>注意</h3>
-      <p>アンバランス荷重があるだけで必ずクリープが発生するわけではない。</p>
-      <p>荷重、回転荷重かどうか、はめあい、材質、温度なども合わせて評価する。</p>
-    </div>
+<div class="slide-shell"><section class="slide">
+<h2>10. 例題：与条件</h2>
+<div class="two">
+  <table>
+    <tr><th>項目</th><th>値</th></tr>
+    <tr><td>モーターイナーシャ J<sub>M</sub></td><td>0.3×10⁻⁴ kg·m²</td></tr>
+    <tr><td>負荷イナーシャ J<sub>L</sub></td><td>1.5×10⁻⁴ kg·m²</td></tr>
+    <tr><td>軸端径 d</td><td>φ14 mm</td></tr>
+    <tr><td>最高回転速度 N</td><td>5000 min⁻¹</td></tr>
+    <tr><td>ローター外径</td><td>φ27.8 mm</td></tr>
+    <tr><td>ブレーキ質量 M<sub>B</sub></td><td>0.04615 kg</td></tr>
+    <tr><td>客先負荷長さ L</td><td>20 mm</td></tr>
+    <tr><td>密度 ρ</td><td>7.86 g/cm³ = 7860 kg/m³</td></tr>
+    <tr><td>釣り合い等級</td><td>G6.3</td></tr>
+    <tr><td>ローター不釣り合い量 U</td><td>3 g·cm</td></tr>
+    <tr><td>磁気アンバランス F₃</td><td>6.37 N</td></tr>
+  </table>
+  <table>
+    <tr><th>距離</th><th>値</th></tr>
+    <tr><td>l₁</td><td>42.5 mm</td></tr>
+    <tr><td>l₂</td><td>15.65 mm</td></tr>
+    <tr><td>l₃</td><td>24.65 mm</td></tr>
+    <tr><td>l₄</td><td>33.65 mm</td></tr>
+    <tr><td>l₅</td><td>50.5 mm</td></tr>
+    <tr><td>l₇</td><td>77.8 mm</td></tr>
+  </table>
+</div>
+<div class="note" style="margin-top:10px">客先負荷は、内径φ14 mm・長さ20 mmの円環として計算する。</div>
+<span class="page">11</span>
+</section></div>
+
+<div class="slide-shell"><section class="slide">
+<h2>11. 例題：各アンバランス荷重</h2>
+<div class="two">
+  <div>
+    <h3>角速度</h3>
+    <div class="eq s">ω = <span class="frac"><span class="top">2π×5000</span><span class="bottom">60</span></span> = 523.6 rad/s</div>
+    <h3>客先負荷</h3>
+    <div class="eq s">D = ⁴√( <span class="frac"><span class="top">32J<sub>L</sub></span><span class="bottom">πLρ</span></span> + d⁴ ) ≈ 55.9 mm</div>
+    <div class="eq s">M<sub>C</sub> ≈ 0.361 kg</div>
+    <div class="eq s">F₁ = M<sub>C</sub>Gω ≈ 1.192 N</div>
   </div>
-  <span class="page">10</span>
-</section>
-
-<section class="slide tight">
-  <h2>10. 例題：与条件</h2>
-
-  <div class="two">
-    <table>
-      <tr><th>項目</th><th>値</th></tr>
-      <tr><td>モーターイナーシャ J<sub>M</sub></td><td>0.3 × 10⁻⁴ kg·m²</td></tr>
-      <tr><td>負荷イナーシャ J<sub>L</sub></td><td>1.5 × 10⁻⁴ kg·m²</td></tr>
-      <tr><td>軸端径 d</td><td>φ14 mm</td></tr>
-      <tr><td>最高回転速度 N</td><td>5000 min⁻¹</td></tr>
-      <tr><td>ローター外径</td><td>φ27.8 mm</td></tr>
-      <tr><td>ブレーキ質量 M<sub>B</sub></td><td>0.04615 kg</td></tr>
-      <tr><td>客先負荷長さ L</td><td>20 mm</td></tr>
-      <tr><td>密度 ρ</td><td>7.86 g/cm³ = 7860 kg/m³</td></tr>
-      <tr><td>釣り合い等級</td><td>G6.3</td></tr>
-      <tr><td>ローター不釣り合い量 U</td><td>3 g·cm</td></tr>
-      <tr><td>磁気アンバランス F₃</td><td>6.37 N</td></tr>
-    </table>
-
-    <table>
-      <tr><th>距離</th><th>値</th></tr>
-      <tr><td>l₁</td><td>42.5 mm</td></tr>
-      <tr><td>l₂</td><td>15.65 mm</td></tr>
-      <tr><td>l₃</td><td>24.65 mm</td></tr>
-      <tr><td>l₄</td><td>33.65 mm</td></tr>
-      <tr><td>l₅</td><td>50.5 mm</td></tr>
-      <tr><td>l₇</td><td>77.8 mm</td></tr>
-    </table>
+  <div>
+    <h3>ローター</h3>
+    <div class="eq s">U = 3 g·cm = 3×10⁻⁵ kg·m</div>
+    <div class="eq s">F₂ = F₄ = Uω² ≈ 8.225 N</div>
+    <h3>磁気アンバランス</h3>
+    <div class="eq s">F₃ = 6.37 N</div>
+    <h3>ブレーキ</h3>
+    <div class="eq s">F₅ = M<sub>B</sub>Gω ≈ 0.152 N</div>
   </div>
+</div>
+<div class="three" style="margin-top:12px">
+  <div class="result">F₁<br>1.192 N</div>
+  <div class="result">F₂ = F₄<br>8.225 N</div>
+  <div class="result">F₃ / F₅<br>6.37 / 0.152 N</div>
+</div>
+<span class="page">12</span>
+</section></div>
 
-  <div class="note" style="margin-top:12px">
-    例題では客先負荷を、内径φ14 mm・長さ20 mmの円環として扱う。
-  </div>
-  <span class="page">11</span>
-</section>
-
-<section class="slide compact">
-  <h2>11. 例題：各荷重を計算</h2>
-
-  <div class="two">
-    <div>
-      <h3>角速度</h3>
-      <div class="eq small">
-        ω =
-        <span class="frac"><span class="top">2π × 5000</span><span class="bottom">60</span></span>
-        = 523.6 rad/s
-      </div>
-
-      <h3>客先負荷</h3>
-      <div class="eq small">
-        D =
-        ⁴√(
-        <span class="frac"><span class="top">32J<sub>L</sub></span><span class="bottom">πLρ</span></span>
-        + d⁴ )
-        ≈ 55.9 mm
-      </div>
-      <div class="eq small">M<sub>C</sub> ≈ 0.361 kg</div>
-      <div class="eq small">F₁ = M<sub>C</sub>Gω ≈ 1.192 N</div>
-    </div>
-
-    <div>
-      <h3>ローター</h3>
-      <div class="eq small">
-        U = 3 g·cm = 3 × 10⁻⁵ kg·m
-      </div>
-      <div class="eq small">F₂ = F₄ = Uω² ≈ 8.225 N</div>
-
-      <h3>磁気アンバランス</h3>
-      <div class="eq small">F₃ = 6.37 N</div>
-
-      <h3>ブレーキ</h3>
-      <div class="eq small">F₅ = M<sub>B</sub>Gω ≈ 0.152 N</div>
-    </div>
-  </div>
-  <span class="page">12</span>
-</section>
-
-<section class="slide compact">
-  <h2>12. 例題：軸受荷重</h2>
-
-  <h3>反負荷側軸受荷重</h3>
-  <div class="eq small">
-    F<sub>NL</sub>
-    =
-    <span class="frac">
-      <span class="top">
-        8.225×15.65 + 6.37×24.65 + 8.225×33.65 + 0.152×50.5 - 1.192×42.5
-      </span>
-      <span class="bottom">77.8</span>
-    </span>
-  </div>
-  <div class="result">F<sub>NL</sub> ≈ 6.68 N</div>
-
-  <h3 style="margin-top:22px">負荷側軸受荷重</h3>
-  <div class="eq small">
-    F<sub>L</sub>
-    =
-    1.192 + 8.225 + 6.37 + 8.225 + 0.152 - 6.677
-  </div>
-  <div class="result">F<sub>L</sub> ≈ 17.49 N</div>
-
-  <div class="note" style="margin-top:20px">
-    この例では、負荷側軸受のラジアル荷重の方が反負荷側より大きくなる。
-  </div>
-  <span class="page">13</span>
-</section>
+<div class="slide-shell"><section class="slide">
+<h2>12. 例題：軸受荷重</h2>
+<h3>反負荷側軸受荷重</h3>
+<div class="eq s">F<sub>NL</sub> = <span class="frac"><span class="top">8.225×15.65 + 6.37×24.65 + 8.225×33.65 + 0.152×50.5 - 1.192×42.5</span><span class="bottom">77.8</span></span></div>
+<div class="result" style="margin-top:8px">F<sub>NL</sub> ≈ 6.68 N</div>
+<h3 style="margin-top:18px">負荷側軸受荷重</h3>
+<div class="eq s">F<sub>L</sub> = 1.192 + 8.225 + 6.37 + 8.225 + 0.152 - 6.68</div>
+<div class="result" style="margin-top:8px">F<sub>L</sub> ≈ 17.49 N</div>
+<div class="flow" style="margin-top:18px">今回の例：負荷側 F<sub>L</sub> ≈ <b>17.49 N</b> ／ 反負荷側 F<sub>NL</sub> ≈ <b>6.68 N</b></div>
+<span class="page">13</span>
+</section></div>
 
 </div>
+<script>
+(function(){
+  const W=960,H=720;
+  function fit(){
+    document.querySelectorAll('.slide-shell').forEach(shell=>{
+      const maxW=Math.min(window.innerWidth*0.96,W);
+      const s=maxW/W;
+      shell.style.width=(W*s)+'px';
+      shell.style.height=(H*s)+'px';
+      const slide=shell.querySelector('.slide');
+      slide.style.transform='scale('+s+')';
+    });
+  }
+  fit();
+  window.addEventListener('resize',fit);
+})();
+</script>
 </body>
 </html>
