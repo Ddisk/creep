@@ -1,1643 +1,193 @@
 <!DOCTYPE html>
-
 <html lang="ja">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
-
 <meta name="googlebot" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
-
-<title>軸のアンバランスと釣り合い等級</title>
-
+<title>クリープ｜モーター軸系のアンバランス荷重と軸受反力</title>
 <style>
-
-*{
-
-  box-sizing:border-box;
-
-}
-
-html{
-
-  scroll-behavior:smooth;
-
-}
-
-body{
-
-  margin:0;
-
-  font-family:
-
-    -apple-system,
-
-    BlinkMacSystemFont,
-
-    "Segoe UI",
-
-    "Hiragino Kaku Gothic ProN",
-
-    "Yu Gothic",
-
-    Meiryo,
-
-    sans-serif;
-
-  background:#f5f7fb;
-
-  color:#1f2937;
-
-  line-height:1.75;
-
-}
-
-main{
-
-  max-width:980px;
-
-  margin:0 auto;
-
-  padding:18px;
-
-}
-
-.hero{
-
-  background:#fff;
-
-  border:1px solid #dbe3ef;
-
-  padding:28px;
-
-  margin:14px 0 18px;
-
-  box-shadow:0 8px 24px rgba(15,23,42,.05);
-
-}
-
-h1{
-
-  margin:0 0 10px;
-
-  font-size:clamp(28px,5vw,46px);
-
-  line-height:1.2;
-
-}
-
-.lead{
-
-  font-size:1.05rem;
-
-  color:#475569;
-
-  margin:0;
-
-}
-
-.section{
-
-  background:#fff;
-
-  border:1px solid #dbe3ef;
-
-  margin:16px 0;
-
-  padding:24px;
-
-  box-shadow:0 6px 20px rgba(15,23,42,.04);
-
-}
-
-h2{
-
-  margin-top:0;
-
-  font-size:1.55rem;
-
-}
-
-h3{
-
-  margin-bottom:8px;
-
-}
-
-.eq{
-
-  font-family:
-
-    ui-monospace,
-
-    SFMono-Regular,
-
-    Menlo,
-
-    Consolas,
-
-    monospace;
-
-  background:#f8fafc;
-
-  border-left:4px solid #64748b;
-
-  padding:14px 16px;
-
-  margin:14px 0;
-
-  overflow:auto;
-
-  font-size:1.05rem;
-
-}
-
-.note{
-
-  background:#fff8e1;
-
-  border:1px solid #f3d58b;
-
-  padding:14px 16px;
-
-  margin:14px 0;
-
-}
-
-.grid{
-
-  display:grid;
-
-  grid-template-columns:repeat(2,minmax(0,1fr));
-
-  gap:16px;
-
-}
-
-.card{
-
-  border:1px solid #dbe3ef;
-
-  padding:16px;
-
-  background:#fbfdff;
-
-}
-
-.diagram{
-
-  margin:18px 0;
-
-  padding:18px;
-
-  border:1px dashed #94a3b8;
-
-  background:#f8fafc;
-
-  overflow:auto;
-
-}
-
-.rotor{
-
-  position:relative;
-
-  width:min(360px,90vw);
-
-  height:220px;
-
-  margin:0 auto;
-
-}
-
-.circle{
-
-  position:absolute;
-
-  width:180px;
-
-  height:180px;
-
-  border:3px solid #334155;
-
-  border-radius:50%;
-
-  left:50%;
-
-  top:50%;
-
-  transform:translate(-50%,-50%);
-
-  background:#fff;
-
-}
-
-.center,
-
-.cg{
-
-  position:absolute;
-
-  width:14px;
-
-  height:14px;
-
-  border-radius:50%;
-
-  top:50%;
-
-  transform:translate(-50%,-50%);
-
-}
-
-.center{
-
-  left:50%;
-
-  background:#111827;
-
-}
-
-.cg{
-
-  left:62%;
-
-  background:#b45309;
-
-}
-
-.line{
-
-  position:absolute;
-
-  height:2px;
-
-  background:#64748b;
-
-  top:50%;
-
-  left:50%;
-
-  width:12%;
-
-  transform:translateY(-50%);
-
-}
-
-.lab{
-
-  position:absolute;
-
-  font-size:.9rem;
-
-  white-space:nowrap;
-
-}
-
-.centerlab{
-
-  left:30%;
-
-  top:52%;
-
-}
-
-.cglab{
-
-  left:64%;
-
-  top:41%;
-
-}
-
-.elab{
-
-  left:54%;
-
-  top:54%;
-
-}
-
-.controls{
-
-  display:grid;
-
-  grid-template-columns:repeat(3,minmax(0,1fr));
-
-  gap:12px;
-
-  margin-top:16px;
-
-}
-
-label{
-
-  display:block;
-
-  font-size:.9rem;
-
-  color:#475569;
-
-  margin-bottom:5px;
-
-}
-
-input,
-
-select{
-
-  width:100%;
-
-  padding:10px 12px;
-
-  border:1px solid #cbd5e1;
-
-  background:#fff;
-
-  font-size:1rem;
-
-  border-radius:0;
-
-}
-
-.results{
-
-  display:grid;
-
-  grid-template-columns:repeat(3,minmax(0,1fr));
-
-  gap:12px;
-
-  margin-top:16px;
-
-}
-
-.result{
-
-  border:1px solid #cbd5e1;
-
-  background:#f8fafc;
-
-  padding:14px;
-
-}
-
-.result b{
-
-  display:block;
-
-  font-size:1.25rem;
-
-  margin-top:4px;
-
-}
-
-.table-wrap{
-
-  overflow:auto;
-
-}
-
-table{
-
-  width:100%;
-
-  border-collapse:collapse;
-
-  min-width:560px;
-
-}
-
-th,
-
-td{
-
-  border:1px solid #cbd5e1;
-
-  padding:10px;
-
-  text-align:center;
-
-}
-
-th{
-
-  background:#f1f5f9;
-
-}
-
-.flow{
-
-  font-size:1.15rem;
-
-  text-align:center;
-
-  font-weight:700;
-
-  letter-spacing:.03em;
-
-  padding:14px;
-
-  background:#eef2ff;
-
-  border:1px solid #c7d2fe;
-
-}
-
-.small{
-
-  font-size:.9rem;
-
-  color:#64748b;
-
-}
-
-.creep-flow{
-
-  text-align:center;
-
-  font-weight:700;
-
-  padding:16px;
-
-  border:1px solid #cbd5e1;
-
-  background:#f8fafc;
-
-  line-height:2;
-
-}
-
-footer{
-
-  color:#64748b;
-
-  font-size:.85rem;
-
-  text-align:center;
-
-  padding:24px 0 36px;
-
-}
-
-@media(max-width:720px){
-
-  .grid{
-
-    grid-template-columns:1fr;
-
-  }
-
-  .controls{
-
-    grid-template-columns:1fr;
-
-  }
-
-  .results{
-
-    grid-template-columns:1fr;
-
-  }
-
-  .section,
-
-  .hero{
-
-    padding:18px;
-
-  }
-
-}
-
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;background:#f4f7fb;color:#1f2937;line-height:1.7}
+main{max-width:1100px;margin:0 auto;padding:16px}
+.hero,.section{background:#fff;border:1px solid #dbe3ef;box-shadow:0 8px 24px rgba(15,23,42,.05);margin:14px 0;padding:24px}
+h1{margin:0 0 8px;font-size:clamp(28px,5vw,46px)}
+h2{margin-top:0;font-size:1.55rem}
+.lead{margin:0;color:#475569}
+.eq{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#f8fafc;border-left:4px solid #64748b;padding:14px 16px;margin:14px 0;overflow:auto}
+.note{background:#fff8e1;border:1px solid #f3d58b;padding:14px 16px;margin:14px 0}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.card{border:1px solid #dbe3ef;background:#fbfdff;padding:16px}
+.small{font-size:.9rem;color:#64748b}
+.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+label{display:block;font-size:.9rem;color:#475569;margin-bottom:4px}
+input{width:100%;padding:10px 12px;border:1px solid #cbd5e1;background:#fff;font-size:1rem;border-radius:0}
+.results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
+.result{border:1px solid #cbd5e1;background:#f8fafc;padding:14px}
+.result b{display:block;font-size:1.2rem;margin-top:4px}
+.flow{text-align:center;font-weight:700;padding:14px;background:#eef2ff;border:1px solid #c7d2fe}
+.schematic-wrap{overflow:auto;border:1px solid #dbe3ef;padding:8px;background:#fbfdff}
+.schematic{position:relative;min-width:880px;height:330px;background:#fff}
+.shaft{position:absolute;left:70px;right:50px;top:150px;height:18px;background:#9ca3af;border:1px solid #64748b}
+.centerline{position:absolute;left:40px;right:30px;top:158px;border-top:1px dashed #334155}
+.bearing,.brake,.rotor,.load{position:absolute;top:105px;background:#e5e7eb;border:2px solid #475569;text-align:center}
+.bearing{width:70px;height:105px;background:#dbeafe}
+#bnl{left:70px} #bl{left:650px}
+.brake{left:220px;width:70px;height:110px}
+.rotor{left:350px;width:220px;height:120px;top:100px}
+.load{left:760px;width:95px;height:120px;top:100px;background:#d1d5db}
+.part-label{position:absolute;width:max-content;font-weight:700;font-size:.9rem;transform:translateX(-50%)}
+.arrow{position:absolute;width:2px;background:#2563eb}
+.arrow:before{content:"";position:absolute;left:-5px;top:-1px;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:10px solid #2563eb}
+.arrow-label{position:absolute;color:#1d4ed8;font-weight:700;font-size:.85rem;transform:translateX(-50%);white-space:nowrap}
+.reaction{position:absolute;width:2px;height:55px;background:#0f766e;top:195px}
+.reaction:before{content:"";position:absolute;left:-5px;top:-1px;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:10px solid #0f766e}
+.reaction-label{position:absolute;top:248px;color:#0f766e;font-weight:700;font-size:.85rem;transform:translateX(-50%);white-space:nowrap}
+.dim{position:absolute;height:1px;background:#2563eb}
+.dim:before,.dim:after{content:"";position:absolute;top:-4px;width:1px;height:9px;background:#2563eb}
+.dim:before{left:0}.dim:after{right:0}
+.dim-label{position:absolute;color:#1d4ed8;font-size:.82rem;font-weight:700;transform:translateX(-50%);white-space:nowrap}
+.vdim{position:absolute;width:1px;background:#2563eb}
+.vdim:before,.vdim:after{content:"";position:absolute;left:-4px;width:9px;height:1px;background:#2563eb}
+.vdim:before{top:0}.vdim:after{bottom:0}
+.vdim-label{position:absolute;color:#1d4ed8;font-size:.82rem;font-weight:700;white-space:nowrap}
+.axisnote{position:absolute;left:45px;top:285px;font-size:.82rem;color:#475569}
+footer{text-align:center;color:#64748b;font-size:.85rem;padding:24px 0 36px}
+@media(max-width:760px){.grid,.controls,.results{grid-template-columns:1fr}.hero,.section{padding:18px}}
 </style>
-
 </head>
-
 <body>
-
 <main>
-
 <section class="hero">
-
-<h1>軸のアンバランスと釣り合い等級</h1>
-
-<p class="lead">
-
-回転中心と重心のずれから、
-
-偏心量・不釣り合い量・遠心力・釣り合い等級G、
-
-さらに軸受クリープとの関係までを一続きで理解するための資料です。
-
-</p>
-
+<h1>クリープ</h1>
+<p class="lead">モーター軸系のアンバランス荷重から、L側・NL側軸受反力、そして軸受クリープとの関係までを整理する。</p>
 </section>
 
 <section class="section">
-
-<h2>1. アンバランスとは</h2>
-
-<p>
-
-回転体の
-
-<strong>回転中心</strong>
-
-と
-
-<strong>重心</strong>
-
-が一致していない状態をアンバランスと考えます。
-
-</p>
-
-<p>
-
-重心が回転中心からずれていると、
-
-回転したときに遠心力が発生し、
-
-振動や軸受への荷重増加の原因になります。
-
-</p>
-
-<div class="diagram">
-
-<div class="rotor">
-
-<div class="circle"></div>
-
-<div class="center"></div>
-
-<div class="cg"></div>
-
-<div class="line"></div>
-
-<div class="lab centerlab">
-
-回転中心
-
+<h2>1. 今回の前提</h2>
+<div class="grid">
+<div class="card"><b>考慮する荷重</b><br>ブレーキアンバランス荷重<br>ローターアンバランス荷重<br>磁気アンバランス荷重<br>客先アンバランス荷重</div>
+<div class="card"><b>方向</b><br>すべて軸に対して直角なラジアル荷重として扱う。<br>スラスト荷重は今回は考えない。</div>
 </div>
-
-<div class="lab cglab">
-
-重心
-
-</div>
-
-<div class="lab elab">
-
-偏心 e
-
-</div>
-
-</div>
-
-</div>
-
 </section>
 
 <section class="section">
-
-<h2>2. 偏心量 e</h2>
-
-<p>
-
-回転中心から重心までの距離を
-
-<strong>偏心量 e</strong>
-
-とします。
-
-</p>
-
-<div class="eq">
-
-e = 回転中心と重心のずれ [mm]
-
-</div>
-
-<p>
-
-偏心量が大きいほどアンバランスは大きくなります。
-
-ただし、実際に発生する力は質量や回転速度にも左右されます。
-
-</p>
-
+<h2>2. モーター軸系のイメージ</h2>
+<div class="schematic-wrap"><div class="schematic">
+<div class="shaft"></div><div class="centerline"></div>
+<div class="bearing" id="bnl"></div><div class="brake"></div><div class="rotor"></div><div class="bearing" id="bl"></div><div class="load"></div>
+<div class="part-label" style="left:105px;top:58px">反負荷側軸受<br>（NL側）</div>
+<div class="part-label" style="left:255px;top:66px">ブレーキ</div>
+<div class="part-label" style="left:460px;top:58px">ローター</div>
+<div class="part-label" style="left:685px;top:58px">負荷側軸受<br>（L側）</div>
+<div class="part-label" style="left:807px;top:58px">客先イナーシャ</div>
+<div class="arrow" style="left:255px;top:48px;height:48px"></div><div class="arrow-label" style="left:255px;top:10px">F<sub>B</sub></div>
+<div class="arrow" style="left:440px;top:48px;height:48px"></div><div class="arrow-label" style="left:440px;top:10px">F<sub>R</sub></div>
+<div class="arrow" style="left:500px;top:48px;height:48px"></div><div class="arrow-label" style="left:500px;top:10px">F<sub>M</sub></div>
+<div class="arrow" style="left:807px;top:48px;height:48px"></div><div class="arrow-label" style="left:807px;top:10px">F<sub>C</sub></div>
+<div class="reaction" style="left:105px"></div><div class="reaction-label" style="left:105px">R<sub>NL</sub></div>
+<div class="reaction" style="left:685px"></div><div class="reaction-label" style="left:685px">R<sub>L</sub></div>
+<div class="dim" style="left:105px;top:290px;width:580px"></div><div class="dim-label" style="left:395px;top:296px">L<sub>B</sub>（両軸受中心間距離）</div>
+<div class="dim" style="left:105px;top:270px;width:150px"></div><div class="dim-label" style="left:180px;top:276px">x<sub>B</sub></div>
+<div class="dim" style="left:105px;top:250px;width:335px"></div><div class="dim-label" style="left:272px;top:256px">x<sub>R</sub></div>
+<div class="dim" style="left:105px;top:230px;width:395px"></div><div class="dim-label" style="left:302px;top:236px">x<sub>M</sub></div>
+<div class="dim" style="left:105px;top:210px;width:702px"></div><div class="dim-label" style="left:456px;top:216px">x<sub>C</sub></div>
+<div class="vdim" style="left:575px;top:100px;height:120px"></div><div class="vdim-label" style="left:590px;top:145px">ローター外径 D<sub>R</sub></div>
+<div class="vdim" style="left:865px;top:145px;height:26px"></div><div class="vdim-label" style="left:875px;top:147px">軸端径 d</div>
+<div class="dim" style="left:760px;top:235px;width:95px"></div><div class="dim-label" style="left:807px;top:242px">客先イナーシャ長さ 0.02 m</div>
+<div class="axisnote">NL側軸受中心を基準 x = 0</div>
+</div></div>
+<p class="small">F<sub>B</sub>：ブレーキ、F<sub>R</sub>：ローター、F<sub>M</sub>：磁気、F<sub>C</sub>：客先イナーシャのアンバランス荷重。</p>
 </section>
 
 <section class="section">
-
-<h2>3. 不釣り合い量 U</h2>
-
-<p>
-
-アンバランスの大きさは、
-
-質量と偏心量の積で表すことができます。
-
-</p>
-
-<div class="eq">
-
-U = m × e
-
-</div>
-
-<p>
-
-ここで、
-
-mは回転体質量、
-
-eは偏心量です。
-
-</p>
-
-<p>
-
-不釣り合い量の単位には
-
-g·mm や g·cm などが使用されます。
-
-</p>
-
-<div class="card">
-
-<b>例</b>
-
-<br><br>
-
-質量 10 kg
-
-<br>
-
-偏心量 0.01 mm
-
-<br><br>
-
-U = 10 × 0.01
-
-<br>
-
-= 0.1 kg·mm
-
-<br>
-
-= 100 g·mm
-
-<br>
-
-= 10 g·cm
-
-</div>
-
+<h2>3. アンバランス荷重</h2>
+<div class="eq">F = m × e × ω²</div>
+<div class="eq">ω = 2πn / 60</div>
+<p>m：質量、e：偏心量、n：回転速度[rpm]。</p>
+<div class="note">ブレーキ、ローター、客先イナーシャは質量アンバランスとして整理できる。磁気アンバランス荷重は別系統の外力として扱う。</div>
 </section>
 
 <section class="section">
-
-<h2>4. 回転すると遠心力が発生する</h2>
-
-<p>
-
-偏心した質量が回転すると、
-
-アンバランスによる遠心力が発生します。
-
-</p>
-
-<div class="eq">
-
-F = m × e × ω²
-
-</div>
-
-<p>
-
-それぞれ、
-
-</p>
-
-<div class="card">
-
-m ：回転体質量 [kg]
-
-<br>
-
-e ：偏心量 [m]
-
-<br>
-
-ω ：角速度 [rad/s]
-
-<br>
-
-F ：遠心力 [N]
-
-</div>
-
-<p>
-
-角速度 ω は、
-
-回転数 n [rpm] から求められます。
-
-</p>
-
-<div class="eq">
-
-ω = 2πn / 60
-
-</div>
-
-<div class="note">
-
-<strong>ポイント</strong>
-
-<br>
-
-遠心力は回転速度の
-
-<strong>2乗</strong>
-
-に比例します。
-
-<br>
-
-そのため、
-
-回転数が2倍になると、
-
-同じ偏心量でも遠心力は約4倍になります。
-
-</div>
-
+<h2>4. 客先イナーシャの外径と質量</h2>
+<p>客先イナーシャは長さ <b>0.02 m</b>、軸端径を内径とする円環として扱う。</p>
+<div class="eq">r<sub>i</sub> = d / 2</div>
+<div class="eq">J<sub>L</sub> = 1/2 × ρ × π × L × (r<sub>o</sub><sup>4</sup> - r<sub>i</sub><sup>4</sup>)</div>
+<div class="eq">r<sub>o</sub> = { 2J<sub>L</sub> / (ρπL) + r<sub>i</sub><sup>4</sup> }<sup>1/4</sup></div>
+<div class="eq">m<sub>C</sub> = ρπL(r<sub>o</sub><sup>2</sup> - r<sub>i</sub><sup>2</sup>)</div>
 </section>
 
 <section class="section">
-
-<h2>5. 釣り合い等級 G とは</h2>
-
-<p>
-
-釣り合い等級 G は、
-
-回転体にどの程度の残留アンバランスを許容するかを表す指標です。
-
-</p>
-
-<div class="eq">
-
-G = e × ω
-
-</div>
-
-<p>
-
-単位は
-
-<strong>mm/s</strong>
-
-です。
-
-</p>
-
-<p>
-
-G値が小さいほど、
-
-より厳しいバランス精度が要求されます。
-
-</p>
-
-<div class="note">
-
-<strong>注意</strong>
-
-<br>
-
-G6.3だからといって、
-
-偏心量が6.3 mmという意味ではありません。
-
-<br><br>
-
-G値と回転速度から、
-
-許容される比不釣り合い量 e を求めます。
-
-</div>
-
+<h2>5. ローター質量の簡易推定</h2>
+<div class="eq">J<sub>M</sub> = 1/2 × m<sub>R</sub> × r<sub>R</sub><sup>2</sup></div>
+<div class="eq">m<sub>R</sub> = 2J<sub>M</sub> / r<sub>R</sub><sup>2</sup></div>
+<div class="note">モーターイナーシャがローター単体の慣性モーメントとして扱える場合の簡易モデル。総慣性値ならローター質量そのものにはならない。</div>
 </section>
 
 <section class="section">
-
-<h2>6. G値から許容偏心量を求める</h2>
-
-<div class="eq">
-
-e = G / ω
-
-</div>
-
-<p>
-
-ω = 2πn / 60 を代入すると、
-
-回転数 n [rpm] を使用して
-
-次の形にできます。
-
-</p>
-
-<div class="eq">
-
-e [μm] = 9549 × G / n
-
-</div>
-
-<div class="card">
-
-<b>G6.3・6000 rpm の例</b>
-
-<br><br>
-
-e = 9549 × 6.3 / 6000
-
-<br><br>
-
-e ≒ 10.0 μm
-
-</div>
-
-<p>
-
-つまり、
-
-G6.3で6000 rpmの場合、
-
-許容される比不釣り合い量は
-
-約10 μmとなります。
-
-</p>
-
+<h2>6. 力の釣り合い</h2>
+<div class="eq">R<sub>NL</sub> + R<sub>L</sub> = F<sub>B</sub> + F<sub>R</sub> + F<sub>M</sub> + F<sub>C</sub></div>
 </section>
 
 <section class="section">
-
-<h2>7. G2.5 と G6.3 の比較</h2>
-
-<div class="table-wrap">
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>
-
-釣り合い等級
-
-</th>
-
-<th>
-
-回転数
-
-</th>
-
-<th>
-
-許容偏心量 e
-
-</th>
-
-<th>
-
-比較
-
-</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-<tr>
-
-<td>
-
-G6.3
-
-</td>
-
-<td>
-
-6000 rpm
-
-</td>
-
-<td>
-
-約10.0 μm
-
-</td>
-
-<td>
-
-基準
-
-</td>
-
-</tr>
-
-<tr>
-
-<td>
-
-G2.5
-
-</td>
-
-<td>
-
-6000 rpm
-
-</td>
-
-<td>
-
-約4.0 μm
-
-</td>
-
-<td>
-
-より厳しい
-
-</td>
-
-</tr>
-
-</tbody>
-
-</table>
-
-</div>
-
-<p>
-
-同じ回転数で比較すると、
-
-G値が小さいほど許容されるアンバランスも小さくなります。
-
-</p>
-
+<h2>7. モーメントの釣り合い</h2>
+<div class="eq">R<sub>L</sub>L<sub>B</sub> = F<sub>B</sub>x<sub>B</sub> + F<sub>R</sub>x<sub>R</sub> + F<sub>M</sub>x<sub>M</sub> + F<sub>C</sub>x<sub>C</sub></div>
+<div class="eq">R<sub>L</sub> = (F<sub>B</sub>x<sub>B</sub> + F<sub>R</sub>x<sub>R</sub> + F<sub>M</sub>x<sub>M</sub> + F<sub>C</sub>x<sub>C</sub>) / L<sub>B</sub></div>
+<div class="eq">R<sub>NL</sub> = F<sub>B</sub> + F<sub>R</sub> + F<sub>M</sub> + F<sub>C</sub> - R<sub>L</sub></div>
+<div class="note">客先イナーシャがL側軸受より外側にある場合はオーバーハング荷重となる。</div>
 </section>
 
 <section class="section">
-
-<h2>8. 寸法公差・軸振れとの違い</h2>
-
-<p>
-
-G6.3・6000 rpmから
-
-e ≒ 10 μm
-
-と求まっても、
-
-これは
-
-<strong>軸径の寸法公差を10 μm以下にする</strong>
-
-という意味ではありません。
-
-</p>
-
-<p>
-
-また、
-
-<strong>軸振れを10 μm以下にする</strong>
-
-という意味とも異なります。
-
-</p>
-
-<p>
-
-ここでの e は、
-
-ロータ全体に残る不釣り合い量を質量で割って、
-
-等価的な重心偏心として表した値です。
-
-</p>
-
-<div class="note">
-
-寸法公差・同軸度・振れなどは
-
-部品の形状や組立精度を表します。
-
-<br><br>
-
-一方、
-
-釣り合い等級は
-
-<strong>回転体全体の質量分布</strong>
-
-を評価するものです。
-
-</div>
-
+<h2>8. クリープとの関係</h2>
+<div class="flow">各部のアンバランス荷重 → L/NL軸受反力 → 軸受輪に作用するラジアル荷重 → はめあい条件が不十分 → 相対すべり → クリープ</div>
+<p style="margin-top:16px">クリープ（Bearing Creep）は、軸受輪と軸またはハウジングのはめあい面で、軸受輪が円周方向に少しずつ移動する現象。</p>
+<div class="note">アンバランス荷重があるから必ずクリープが発生するわけではない。荷重、回転荷重かどうか、はめあい、材質、温度などを合わせて評価する。</div>
 </section>
 
 <section class="section">
-
-<h2>9. アンバランスと軸受クリープ</h2>
-
-<p>
-
-アンバランスがあると、
-
-回転に伴って遠心力が発生します。
-
-</p>
-
-<p>
-
-この力は軸受にも伝わるため、
-
-軸受輪には回転荷重が作用する場合があります。
-
-</p>
-
-<div class="creep-flow">
-
-アンバランス
-
-<br>
-
-↓
-
-<br>
-
-遠心力が発生
-
-<br>
-
-↓
-
-<br>
-
-軸受に回転荷重が作用
-
-<br>
-
-↓
-
-<br>
-
-はめあいが不十分
-
-<br>
-
-↓
-
-<br>
-
-軸受輪と軸・ハウジングの間で相対すべり
-
-<br>
-
-↓
-
-<br>
-
-クリープ
-
-</div>
-
-<h3>クリープとは</h3>
-
-<p>
-
-軸受のクリープ
-
-（Bearing Creep）とは、
-
-軸受輪と軸またはハウジングのはめあい面で、
-
-軸受輪が徐々に円周方向へ移動する現象です。
-
-</p>
-
-<p>
-
-クリープが発生すると、
-
-はめあい面で摩耗や発熱が発生し、
-
-軸やハウジングを損傷する可能性があります。
-
-</p>
-
-<div class="note">
-
-<strong>重要</strong>
-
-<br>
-
-アンバランスがあるから必ずクリープが発生する、
-
-という意味ではありません。
-
-<br><br>
-
-アンバランスによる荷重、
-
-軸受荷重の方向、
-
-はめあい、
-
-材質、
-
-温度など複数の条件によって決まります。
-
-</div>
-
-</section>
-
-<section class="section">
-
-<h2>10. 自動計算</h2>
-
-<p>
-
-質量、
-
-回転数、
-
-釣り合い等級を入力すると、
-
-許容偏心量、
-
-許容不釣り合い量、
-
-その回転数でのアンバランス力を計算します。
-
-</p>
-
+<h2>9. 簡易計算</h2>
 <div class="controls">
-
-<div>
-
-<label for="mass">
-
-質量 m [kg]
-
-</label>
-
-<input
-
-id="mass"
-
-type="number"
-
-min="0"
-
-step="0.1"
-
-value="10"
-
->
-
+<div><label>ブレーキ荷重 F_B [N]</label><input id="fb" type="number" step="0.01" value="0"></div>
+<div><label>ローター荷重 F_R [N]</label><input id="fr" type="number" step="0.01" value="0"></div>
+<div><label>磁気荷重 F_M [N]</label><input id="fm" type="number" step="0.01" value="0"></div>
+<div><label>客先荷重 F_C [N]</label><input id="fc" type="number" step="0.01" value="0"></div>
+<div><label>両軸受間距離 L_B [m]</label><input id="lb" type="number" step="0.001" value="0.2"></div>
+<div><label>ブレーキ位置 x_B [m]</label><input id="xb" type="number" step="0.001" value="0.05"></div>
+<div><label>ローター位置 x_R [m]</label><input id="xr" type="number" step="0.001" value="0.10"></div>
+<div><label>磁気荷重位置 x_M [m]</label><input id="xm" type="number" step="0.001" value="0.10"></div>
+<div><label>客先位置 x_C [m]</label><input id="xc" type="number" step="0.001" value="0.24"></div>
 </div>
-
-<div>
-
-<label for="rpm">
-
-回転数 n [rpm]
-
-</label>
-
-<input
-
-id="rpm"
-
-type="number"
-
-min="1"
-
-step="100"
-
-value="6000"
-
->
-
-</div>
-
-<div>
-
-<label for="grade">
-
-釣り合い等級 G [mm/s]
-
-</label>
-
-<select id="grade">
-
-<option value="0.4">
-
-G0.4
-
-</option>
-
-<option value="1">
-
-G1
-
-</option>
-
-<option value="2.5">
-
-G2.5
-
-</option>
-
-<option value="6.3" selected>
-
-G6.3
-
-</option>
-
-<option value="16">
-
-G16
-
-</option>
-
-<option value="40">
-
-G40
-
-</option>
-
-</select>
-
-</div>
-
-</div>
-
 <div class="results">
-
-<div class="result">
-
-許容偏心量 e
-
-<b id="eOut">
-
--
-
-</b>
-
-<span class="small">
-
-μm
-
-</span>
-
+<div class="result">L側軸受反力 R_L<b id="rl">-</b><span class="small">N</span></div>
+<div class="result">NL側軸受反力 R_NL<b id="rnl">-</b><span class="small">N</span></div>
 </div>
-
-<div class="result">
-
-許容不釣り合い量 U
-
-<b id="uOut">
-
--
-
-</b>
-
-<span class="small">
-
-g·cm
-
-</span>
-
-</div>
-
-<div class="result">
-
-アンバランス力 F
-
-<b id="fOut">
-
--
-
-</b>
-
-<span class="small">
-
-N
-
-</span>
-
-</div>
-
-</div>
-
-<p class="small">
-
-※ Fは、
-
-求めた許容偏心量が質量全体の等価偏心として作用すると仮定した計算値です。
-
-</p>
-
+<p class="small">※ 各荷重を同一方向に作用する瞬間値として簡略計算。位相差を考慮する場合はベクトル合成が必要。</p>
 </section>
 
 <section class="section">
-
-<h2>11. 全体のつながり</h2>
-
-<div class="flow">
-
-釣り合い等級 G
-
-→
-
-許容偏心 e
-
-→
-
-不釣り合い量 U
-
-→
-
-遠心力 F
-
-</div>
-
-<div
-
-class="grid"
-
-style="margin-top:16px"
-
->
-
-<div class="card">
-
-<b>
-
-G → e
-
-</b>
-
-<br>
-
-e = G / ω
-
-</div>
-
-<div class="card">
-
-<b>
-
-e → U
-
-</b>
-
-<br>
-
-U = m × e
-
-</div>
-
-<div class="card">
-
-<b>
-
-e → F
-
-</b>
-
-<br>
-
-F = m × e × ω²
-
-</div>
-
-<div class="card">
-
-<b>
-
-回転数の影響
-
-</b>
-
-<br>
-
-F ∝ ω²
-
-</div>
-
-</div>
-
+<h2>10. 全体の流れ</h2>
+<div class="flow">既知仕様 → 各部の質量・形状 → アンバランス荷重 → 作用位置 → 力の釣り合い → モーメントの釣り合い → L/NL軸受反力 → クリープ検討</div>
 </section>
 
-<footer>
-
-このページは学習・説明用です。
-
-<br>
-
-実設計では、
-
-対象機械に適用される規格、
-
-メーカー基準、
-
-ロータ構造、
-
-軸受条件、
-
-支持条件などを確認してください。
-
-</footer>
-
+<footer>学習・説明用の簡易モデル。実設計では対象モーター、軸受、はめあい、支持条件、メーカー基準に従って評価する。</footer>
 </main>
 
 <script>
-
-const mass =
-
-document.getElementById('mass');
-
-const rpm =
-
-document.getElementById('rpm');
-
-const grade =
-
-document.getElementById('grade');
-
-const eOut =
-
-document.getElementById('eOut');
-
-const uOut =
-
-document.getElementById('uOut');
-
-const fOut =
-
-document.getElementById('fOut');
-
+const ids=["fb","fr","fm","fc","lb","xb","xr","xm","xc"];
+const els=Object.fromEntries(ids.map(id=>[id,document.getElementById(id)]));
+const rl=document.getElementById("rl");
+const rnl=document.getElementById("rnl");
 function calc(){
-
-  const m =
-
-  parseFloat(mass.value);
-
-  const n =
-
-  parseFloat(rpm.value);
-
-  const G =
-
-  parseFloat(grade.value);
-
-  if(
-
-    !(m > 0) ||
-
-    !(n > 0) ||
-
-    !(G > 0)
-
-  ){
-
-    eOut.textContent = '-';
-
-    uOut.textContent = '-';
-
-    fOut.textContent = '-';
-
-    return;
-
-  }
-
-  const omega =
-
-  2 * Math.PI * n / 60;
-
-  const e_mm =
-
-  G / omega;
-
-  const e_um =
-
-  e_mm * 1000;
-
-  /*
-
-  kg・mm
-
-  ↓
-
-  g・cm
-
-  1 kg・mm
-
-  =
-
-  100 g・cm
-
-  */
-
-  const U_gcm =
-
-  m * e_mm * 100;
-
-  /*
-
-  mm → m
-
-  */
-
-  const e_m =
-
-  e_mm / 1000;
-
-  /*
-
-  遠心力
-
-  F = m e ω²
-
-  */
-
-  const F =
-
-  m * e_m * omega * omega;
-
-  eOut.textContent =
-
-  e_um.toFixed(2);
-
-  uOut.textContent =
-
-  U_gcm.toFixed(2);
-
-  fOut.textContent =
-
-  F.toFixed(2);
-
+  const v=Object.fromEntries(ids.map(id=>[id,parseFloat(els[id].value)||0]));
+  if(v.lb===0){rl.textContent="-";rnl.textContent="-";return;}
+  const RL=(v.fb*v.xb+v.fr*v.xr+v.fm*v.xm+v.fc*v.xc)/v.lb;
+  const RNL=v.fb+v.fr+v.fm+v.fc-RL;
+  rl.textContent=RL.toFixed(3);
+  rnl.textContent=RNL.toFixed(3);
 }
-
-[
-
-  mass,
-
-  rpm,
-
-  grade
-
-]
-
-.forEach(
-
-  el =>
-
-  el.addEventListener(
-
-    'input',
-
-    calc
-
-  )
-
-);
-
+ids.forEach(id=>els[id].addEventListener("input",calc));
 calc();
-
 </script>
-
 </body>
-
 </html>
