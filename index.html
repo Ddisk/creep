@@ -5,188 +5,303 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
 <meta name="googlebot" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
-<title>クリープ｜モーター軸系のアンバランス荷重と軸受反力</title>
+<title>クリープ｜アンバランス荷重と軸受荷重</title>
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;background:#f4f7fb;color:#1f2937;line-height:1.7}
-main{max-width:1100px;margin:0 auto;padding:16px}
-.hero,.section{background:#fff;border:1px solid #dbe3ef;box-shadow:0 8px 24px rgba(15,23,42,.05);margin:14px 0;padding:24px}
-h1{margin:0 0 8px;font-size:clamp(28px,5vw,46px)}
-h2{margin-top:0;font-size:1.55rem}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;background:#f4f7fb;color:#1f2937;line-height:1.75}
+main{max-width:1100px;margin:auto;padding:16px}
+.hero,.section{background:#fff;border:1px solid #dbe3ef;margin:14px 0;padding:24px;box-shadow:0 8px 24px rgba(15,23,42,.05)}
+h1{margin:0 0 10px;font-size:clamp(30px,5vw,48px)}
+h2{margin-top:0;font-size:1.5rem}
+h3{margin-bottom:8px}
 .lead{margin:0;color:#475569}
 .eq{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#f8fafc;border-left:4px solid #64748b;padding:14px 16px;margin:14px 0;overflow:auto}
 .note{background:#fff8e1;border:1px solid #f3d58b;padding:14px 16px;margin:14px 0}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.card{border:1px solid #dbe3ef;background:#fbfdff;padding:16px}
-.small{font-size:.9rem;color:#64748b}
+.card{background:#fbfdff;border:1px solid #dbe3ef;padding:16px}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:700px}
+th,td{border:1px solid #cbd5e1;padding:10px;text-align:center}
+th{background:#f1f5f9}
 .controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 label{display:block;font-size:.9rem;color:#475569;margin-bottom:4px}
-input{width:100%;padding:10px 12px;border:1px solid #cbd5e1;background:#fff;font-size:1rem;border-radius:0}
+input{width:100%;padding:10px 12px;border:1px solid #cbd5e1;background:#fff;font-size:1rem}
 .results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
-.result{border:1px solid #cbd5e1;background:#f8fafc;padding:14px}
-.result b{display:block;font-size:1.2rem;margin-top:4px}
-.flow{text-align:center;font-weight:700;padding:14px;background:#eef2ff;border:1px solid #c7d2fe}
-.schematic-wrap{overflow:auto;border:1px solid #dbe3ef;padding:8px;background:#fbfdff}
-.schematic{position:relative;min-width:880px;height:330px;background:#fff}
-.shaft{position:absolute;left:70px;right:50px;top:150px;height:18px;background:#9ca3af;border:1px solid #64748b}
-.centerline{position:absolute;left:40px;right:30px;top:158px;border-top:1px dashed #334155}
-.bearing,.brake,.rotor,.load{position:absolute;top:105px;background:#e5e7eb;border:2px solid #475569;text-align:center}
-.bearing{width:70px;height:105px;background:#dbeafe}
-#bnl{left:70px} #bl{left:650px}
-.brake{left:220px;width:70px;height:110px}
-.rotor{left:350px;width:220px;height:120px;top:100px}
-.load{left:760px;width:95px;height:120px;top:100px;background:#d1d5db}
-.part-label{position:absolute;width:max-content;font-weight:700;font-size:.9rem;transform:translateX(-50%)}
-.arrow{position:absolute;width:2px;background:#2563eb}
-.arrow:before{content:"";position:absolute;left:-5px;top:-1px;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:10px solid #2563eb}
-.arrow-label{position:absolute;color:#1d4ed8;font-weight:700;font-size:.85rem;transform:translateX(-50%);white-space:nowrap}
-.reaction{position:absolute;width:2px;height:55px;background:#0f766e;top:195px}
+.result{background:#f8fafc;border:1px solid #cbd5e1;padding:14px}
+.result b{display:block;font-size:1.25rem;margin-top:4px}
+.small{font-size:.88rem;color:#64748b}
+.flow{text-align:center;font-weight:700;background:#eef2ff;border:1px solid #c7d2fe;padding:14px}
+.schematic-wrap{overflow:auto;border:1px solid #dbe3ef;background:#fbfdff;padding:8px}
+.schematic{position:relative;min-width:980px;height:350px;background:#fff}
+.shaft{position:absolute;left:70px;right:45px;top:160px;height:18px;background:#9ca3af;border:1px solid #64748b}
+.centerline{position:absolute;left:40px;right:25px;top:169px;border-top:1px dashed #334155}
+.bearing,.part{position:absolute;border:2px solid #475569;background:#e5e7eb;text-align:center}
+.bearing{top:105px;width:70px;height:120px;background:#dbeafe}
+.part{top:110px;height:110px}
+#bnl{left:105px} #encoder{left:195px;width:50px;height:90px;top:120px}
+#brake{left:265px;width:70px} #rotor{left:390px;width:240px}
+#bl{left:690px} #customer{left:820px;width:100px;background:#d1d5db}
+.label{position:absolute;transform:translateX(-50%);font-size:.88rem;font-weight:700;white-space:nowrap}
+.load-arrow{position:absolute;width:2px;background:#2563eb}
+.load-arrow:before{content:"";position:absolute;left:-5px;top:-1px;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:10px solid #2563eb}
+.load-label{position:absolute;transform:translateX(-50%);color:#1d4ed8;font-size:.82rem;font-weight:700;white-space:nowrap}
+.reaction{position:absolute;width:2px;height:55px;background:#0f766e;top:215px}
 .reaction:before{content:"";position:absolute;left:-5px;top:-1px;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:10px solid #0f766e}
-.reaction-label{position:absolute;top:248px;color:#0f766e;font-weight:700;font-size:.85rem;transform:translateX(-50%);white-space:nowrap}
+.reaction-label{position:absolute;transform:translateX(-50%);top:268px;color:#0f766e;font-size:.84rem;font-weight:700;white-space:nowrap}
 .dim{position:absolute;height:1px;background:#2563eb}
 .dim:before,.dim:after{content:"";position:absolute;top:-4px;width:1px;height:9px;background:#2563eb}
 .dim:before{left:0}.dim:after{right:0}
-.dim-label{position:absolute;color:#1d4ed8;font-size:.82rem;font-weight:700;transform:translateX(-50%);white-space:nowrap}
-.vdim{position:absolute;width:1px;background:#2563eb}
-.vdim:before,.vdim:after{content:"";position:absolute;left:-4px;width:9px;height:1px;background:#2563eb}
-.vdim:before{top:0}.vdim:after{bottom:0}
-.vdim-label{position:absolute;color:#1d4ed8;font-size:.82rem;font-weight:700;white-space:nowrap}
-.axisnote{position:absolute;left:45px;top:285px;font-size:.82rem;color:#475569}
-footer{text-align:center;color:#64748b;font-size:.85rem;padding:24px 0 36px}
+.dim-label{position:absolute;transform:translateX(-50%);color:#1d4ed8;font-size:.8rem;font-weight:700;white-space:nowrap}
+.origin{position:absolute;left:705px;top:300px;font-size:.8rem;color:#475569;font-weight:700}
+footer{text-align:center;color:#64748b;font-size:.85rem;padding:24px 0 34px}
 @media(max-width:760px){.grid,.controls,.results{grid-template-columns:1fr}.hero,.section{padding:18px}}
 </style>
 </head>
 <body>
 <main>
+
 <section class="hero">
 <h1>クリープ</h1>
-<p class="lead">モーター軸系のアンバランス荷重から、L側・NL側軸受反力、そして軸受クリープとの関係までを整理する。</p>
+<p class="lead">アンバランス荷重からL側・NL側軸受荷重を求め、クリープとの関係を整理する。</p>
 </section>
 
 <section class="section">
-<h2>1. 今回の前提</h2>
-<div class="grid">
-<div class="card"><b>考慮する荷重</b><br>ブレーキアンバランス荷重<br>ローターアンバランス荷重<br>磁気アンバランス荷重<br>客先アンバランス荷重</div>
-<div class="card"><b>方向</b><br>すべて軸に対して直角なラジアル荷重として扱う。<br>スラスト荷重は今回は考えない。</div>
-</div>
+<h2>1. アンバランス荷重とは</h2>
+<p>質量 <b>m</b> の物体が回転中心から距離 <b>r</b> の位置を角速度 <b>ω</b> で回ると、遠心力が発生する。</p>
+<div class="eq">F = m r ω²</div>
+<p>モーターでは、回転体の重心が回転中心軸から <b>e</b> だけずれていると、その重心が軸のまわりを回転する。</p>
+<div class="eq">F = m e ω²</div>
+<p>この回転するラジアル方向の力を、ここではアンバランス荷重として扱う。</p>
+<div class="note"><strong>今回の前提</strong><br>スラスト荷重は考えず、すべて軸に対して直角なラジアル方向の荷重として扱う。</div>
 </section>
 
 <section class="section">
-<h2>2. モーター軸系のイメージ</h2>
+<h2>2. 釣り合い等級との関係</h2>
+<div class="eq">G = e ω</div>
+<div class="eq">e = G / ω</div>
+<p>これを F = meω² に代入すると、</p>
+<div class="eq">F = m G ω</div>
+<div class="eq">ω = 2πN / 60</div>
+<p>質量・釣り合い等級・回転速度が分かればアンバランス荷重を求められる。</p>
+</section>
+
+<section class="section">
+<h2>3. 客先負荷質量が未知の場合</h2>
+<p>客先負荷を、長さ <b>L</b>、外径 <b>D</b>、内径 <b>d</b>、密度 <b>ρ</b> の円環として考える。</p>
+<div class="eq">J₁ = 1/2 M₁ R₁²</div>
+<div class="eq">M₁ = πR₁²Lρ</div>
+<p>R₁ = D/2 より、</p>
+<div class="eq">J₁ = πLρD⁴ / 32</div>
+<p>同様に内径 d のくり抜き部分は、</p>
+<div class="eq">J₂ = πLρd⁴ / 32</div>
+<div class="eq">J<sub>L</sub> = J₁ - J₂ = πLρ(D⁴ - d⁴) / 32</div>
+<p>Dについて解くと、</p>
+<div class="eq">D = { 32J<sub>L</sub> / (πLρ) + d⁴ }<sup>1/4</sup></div>
+<p>客先負荷質量は、</p>
+<div class="eq">M<sub>C</sub> = πLρ(D² - d²) / 4</div>
+<p>したがって、客先アンバランス荷重は、</p>
+<div class="eq">F₁ = M<sub>C</sub> G ω</div>
+</section>
+
+<section class="section">
+<h2>4. モーター軸系と距離</h2>
 <div class="schematic-wrap"><div class="schematic">
 <div class="shaft"></div><div class="centerline"></div>
-<div class="bearing" id="bnl"></div><div class="brake"></div><div class="rotor"></div><div class="bearing" id="bl"></div><div class="load"></div>
-<div class="part-label" style="left:105px;top:58px">反負荷側軸受<br>（NL側）</div>
-<div class="part-label" style="left:255px;top:66px">ブレーキ</div>
-<div class="part-label" style="left:460px;top:58px">ローター</div>
-<div class="part-label" style="left:685px;top:58px">負荷側軸受<br>（L側）</div>
-<div class="part-label" style="left:807px;top:58px">客先イナーシャ</div>
-<div class="arrow" style="left:255px;top:48px;height:48px"></div><div class="arrow-label" style="left:255px;top:10px">F<sub>B</sub></div>
-<div class="arrow" style="left:440px;top:48px;height:48px"></div><div class="arrow-label" style="left:440px;top:10px">F<sub>R</sub></div>
-<div class="arrow" style="left:500px;top:48px;height:48px"></div><div class="arrow-label" style="left:500px;top:10px">F<sub>M</sub></div>
-<div class="arrow" style="left:807px;top:48px;height:48px"></div><div class="arrow-label" style="left:807px;top:10px">F<sub>C</sub></div>
-<div class="reaction" style="left:105px"></div><div class="reaction-label" style="left:105px">R<sub>NL</sub></div>
-<div class="reaction" style="left:685px"></div><div class="reaction-label" style="left:685px">R<sub>L</sub></div>
-<div class="dim" style="left:105px;top:290px;width:580px"></div><div class="dim-label" style="left:395px;top:296px">L<sub>B</sub>（両軸受中心間距離）</div>
-<div class="dim" style="left:105px;top:270px;width:150px"></div><div class="dim-label" style="left:180px;top:276px">x<sub>B</sub></div>
-<div class="dim" style="left:105px;top:250px;width:335px"></div><div class="dim-label" style="left:272px;top:256px">x<sub>R</sub></div>
-<div class="dim" style="left:105px;top:230px;width:395px"></div><div class="dim-label" style="left:302px;top:236px">x<sub>M</sub></div>
-<div class="dim" style="left:105px;top:210px;width:702px"></div><div class="dim-label" style="left:456px;top:216px">x<sub>C</sub></div>
-<div class="vdim" style="left:575px;top:100px;height:120px"></div><div class="vdim-label" style="left:590px;top:145px">ローター外径 D<sub>R</sub></div>
-<div class="vdim" style="left:865px;top:145px;height:26px"></div><div class="vdim-label" style="left:875px;top:147px">軸端径 d</div>
-<div class="dim" style="left:760px;top:235px;width:95px"></div><div class="dim-label" style="left:807px;top:242px">客先イナーシャ長さ 0.02 m</div>
-<div class="axisnote">NL側軸受中心を基準 x = 0</div>
+<div class="bearing" id="bnl"></div><div class="part" id="encoder"></div><div class="part" id="brake"></div><div class="part" id="rotor"></div><div class="bearing" id="bl"></div><div class="part" id="customer"></div>
+<div class="label" style="left:140px;top:62px">反負荷側軸受</div>
+<div class="label" style="left:220px;top:78px">エンコーダ</div>
+<div class="label" style="left:300px;top:62px">ブレーキ</div>
+<div class="label" style="left:510px;top:62px">ローター</div>
+<div class="label" style="left:725px;top:62px">負荷側軸受</div>
+<div class="label" style="left:870px;top:62px">客先負荷</div>
+
+<div class="load-arrow" style="left:870px;top:42px;height:58px"></div><div class="load-label" style="left:870px;top:8px">F₁</div>
+<div class="load-arrow" style="left:595px;top:42px;height:58px"></div><div class="load-label" style="left:595px;top:8px">F₂</div>
+<div class="load-arrow" style="left:510px;top:42px;height:58px"></div><div class="load-label" style="left:510px;top:8px">F₃</div>
+<div class="load-arrow" style="left:425px;top:42px;height:58px"></div><div class="load-label" style="left:425px;top:8px">F₄</div>
+<div class="load-arrow" style="left:300px;top:42px;height:58px"></div><div class="load-label" style="left:300px;top:8px">F₅</div>
+<div class="load-arrow" style="left:220px;top:42px;height:58px"></div><div class="load-label" style="left:220px;top:8px">F₆ = 0</div>
+
+<div class="reaction" style="left:140px"></div><div class="reaction-label" style="left:140px">F<sub>NL</sub></div>
+<div class="reaction" style="left:725px"></div><div class="reaction-label" style="left:725px">F<sub>L</sub></div>
+
+<div class="dim" style="left:725px;top:235px;width:145px"></div><div class="dim-label" style="left:797px;top:240px">l₁ = 42.5 mm</div>
+<div class="dim" style="left:595px;top:252px;width:130px"></div><div class="dim-label" style="left:660px;top:257px">l₂ = 15.65 mm</div>
+<div class="dim" style="left:510px;top:269px;width:215px"></div><div class="dim-label" style="left:617px;top:274px">l₃ = 24.65 mm</div>
+<div class="dim" style="left:425px;top:286px;width:300px"></div><div class="dim-label" style="left:575px;top:291px">l₄ = 33.65 mm</div>
+<div class="dim" style="left:300px;top:303px;width:425px"></div><div class="dim-label" style="left:512px;top:308px">l₅ = 50.5 mm</div>
+<div class="dim" style="left:140px;top:320px;width:585px"></div><div class="dim-label" style="left:432px;top:325px">l₇ = 77.8 mm</div>
+<div class="origin">L側軸受中心を基準 x = 0</div>
 </div></div>
-<p class="small">F<sub>B</sub>：ブレーキ、F<sub>R</sub>：ローター、F<sub>M</sub>：磁気、F<sub>C</sub>：客先イナーシャのアンバランス荷重。</p>
+
+<div class="table-wrap" style="margin-top:14px"><table>
+<thead><tr><th>記号</th><th>内容</th><th>距離</th></tr></thead>
+<tbody>
+<tr><td>F₁</td><td>客先アンバランス荷重</td><td>l₁ = 42.5 mm</td></tr>
+<tr><td>F₂</td><td>ローター負荷側アンバランス荷重</td><td>l₂ = 15.65 mm</td></tr>
+<tr><td>F₃</td><td>磁気アンバランス荷重</td><td>l₃ = 24.65 mm</td></tr>
+<tr><td>F₄</td><td>ローター反負荷側アンバランス荷重</td><td>l₄ = 33.65 mm</td></tr>
+<tr><td>F₅</td><td>ブレーキアンバランス荷重</td><td>l₅ = 50.5 mm</td></tr>
+<tr><td>F₆</td><td>エンコーダアンバランス荷重（今回は0）</td><td>－</td></tr>
+<tr><td>F<sub>NL</sub></td><td>反負荷側軸受荷重</td><td>l₇ = 77.8 mm</td></tr>
+<tr><td>F<sub>L</sub></td><td>負荷側軸受荷重</td><td>基準 x = 0</td></tr>
+</tbody>
+</table></div>
 </section>
 
 <section class="section">
-<h2>3. アンバランス荷重</h2>
-<div class="eq">F = m × e × ω²</div>
-<div class="eq">ω = 2πn / 60</div>
-<p>m：質量、e：偏心量、n：回転速度[rpm]。</p>
-<div class="note">ブレーキ、ローター、客先イナーシャは質量アンバランスとして整理できる。磁気アンバランス荷重は別系統の外力として扱う。</div>
+<h2>5. 各アンバランス荷重</h2>
+<h3>客先負荷：F₁</h3>
+<div class="eq">F₁ = M<sub>C</sub> G ω</div>
+
+<h3>ローター：F₂、F₄</h3>
+<p>ローターの不釣り合い量を U = 3 g·cm とする。</p>
+<div class="eq">U = mr</div>
+<div class="eq">F = Uω²</div>
+<p>今回は負荷側と反負荷側を同じとする。</p>
+<div class="eq">F₂ = F₄ = Uω²</div>
+
+<h3>磁気アンバランス：F₃</h3>
+<div class="eq">F₃ = 6.37 N（既知）</div>
+
+<h3>ブレーキ：F₅</h3>
+<div class="eq">F₅ = M<sub>B</sub> G ω</div>
+
+<h3>エンコーダ：F₆</h3>
+<div class="eq">F₆ = 0</div>
 </section>
 
 <section class="section">
-<h2>4. 客先イナーシャの外径と質量</h2>
-<p>客先イナーシャは長さ <b>0.02 m</b>、軸端径を内径とする円環として扱う。</p>
-<div class="eq">r<sub>i</sub> = d / 2</div>
-<div class="eq">J<sub>L</sub> = 1/2 × ρ × π × L × (r<sub>o</sub><sup>4</sup> - r<sub>i</sub><sup>4</sup>)</div>
-<div class="eq">r<sub>o</sub> = { 2J<sub>L</sub> / (ρπL) + r<sub>i</sub><sup>4</sup> }<sup>1/4</sup></div>
-<div class="eq">m<sub>C</sub> = ρπL(r<sub>o</sub><sup>2</sup> - r<sub>i</sub><sup>2</sup>)</div>
+<h2>6. L側軸受まわりのモーメントの釣り合い</h2>
+<p>すべての距離は負荷側軸受中心から測る。</p>
+<div class="eq">F<sub>NL</sub>l₇ = F₂l₂ + F₃l₃ + F₄l₄ + F₅l₅ + F₆l₆ - F₁l₁</div>
+<p>今回は F₆ = 0、F₄ = F₂ なので、</p>
+<div class="eq">F<sub>NL</sub> = { F₂l₂ + F₃l₃ + F₂l₄ + F₅l₅ - F₁l₁ } / l₇</div>
 </section>
 
 <section class="section">
-<h2>5. ローター質量の簡易推定</h2>
-<div class="eq">J<sub>M</sub> = 1/2 × m<sub>R</sub> × r<sub>R</sub><sup>2</sup></div>
-<div class="eq">m<sub>R</sub> = 2J<sub>M</sub> / r<sub>R</sub><sup>2</sup></div>
-<div class="note">モーターイナーシャがローター単体の慣性モーメントとして扱える場合の簡易モデル。総慣性値ならローター質量そのものにはならない。</div>
+<h2>7. 力の釣り合い</h2>
+<div class="eq">F<sub>L</sub> + F<sub>NL</sub> = F₁ + F₂ + F₃ + F₄ + F₅</div>
+<div class="eq">F<sub>L</sub> = F₁ + F₂ + F₃ + F₄ + F₅ - F<sub>NL</sub></div>
 </section>
 
 <section class="section">
-<h2>6. 力の釣り合い</h2>
-<div class="eq">R<sub>NL</sub> + R<sub>L</sub> = F<sub>B</sub> + F<sub>R</sub> + F<sub>M</sub> + F<sub>C</sub></div>
+<h2>8. 例題</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>項目</th><th>値</th></tr></thead>
+<tbody>
+<tr><td>モーターイナーシャ</td><td>0.3 × 10⁻⁴ kg·m²</td></tr>
+<tr><td>負荷イナーシャ</td><td>1.5 × 10⁻⁴ kg·m²</td></tr>
+<tr><td>軸端径</td><td>φ14 mm</td></tr>
+<tr><td>最高回転速度</td><td>5000 min⁻¹</td></tr>
+<tr><td>ローター外径</td><td>φ27.8 mm</td></tr>
+<tr><td>ブレーキ質量</td><td>0.04615 kg</td></tr>
+<tr><td>客先負荷長さ</td><td>20 mm</td></tr>
+<tr><td>密度</td><td>7.86 g/cm³ = 7860 kg/m³</td></tr>
+<tr><td>釣り合い等級</td><td>G6.3</td></tr>
+<tr><td>ローター不釣り合い量</td><td>3 g·cm</td></tr>
+<tr><td>磁気アンバランス荷重</td><td>6.37 N</td></tr>
+</tbody>
+</table></div>
+
+<div class="grid" style="margin-top:16px">
+<div class="card"><b>角速度</b><br>ω ≈ 523.6 rad/s</div>
+<div class="card"><b>客先負荷外径</b><br>D ≈ 55.9 mm</div>
+<div class="card"><b>客先負荷質量</b><br>M<sub>C</sub> ≈ 0.361 kg</div>
+<div class="card"><b>ローター質量（簡易推定）</b><br>M<sub>R</sub> ≈ 0.311 kg</div>
+<div class="card"><b>F₁</b><br>≈ 1.19 N</div>
+<div class="card"><b>F₂ = F₄</b><br>≈ 8.22 N</div>
+<div class="card"><b>F₃</b><br>= 6.37 N</div>
+<div class="card"><b>F₅</b><br>≈ 0.152 N</div>
+</div>
+
+<div class="note">
+<strong>軸受荷重</strong><br><br>
+F<sub>NL</sub> ≈ <b>6.68 N</b><br>
+F<sub>L</sub> ≈ <b>17.48 N</b>
+</div>
 </section>
 
 <section class="section">
-<h2>7. モーメントの釣り合い</h2>
-<div class="eq">R<sub>L</sub>L<sub>B</sub> = F<sub>B</sub>x<sub>B</sub> + F<sub>R</sub>x<sub>R</sub> + F<sub>M</sub>x<sub>M</sub> + F<sub>C</sub>x<sub>C</sub></div>
-<div class="eq">R<sub>L</sub> = (F<sub>B</sub>x<sub>B</sub> + F<sub>R</sub>x<sub>R</sub> + F<sub>M</sub>x<sub>M</sub> + F<sub>C</sub>x<sub>C</sub>) / L<sub>B</sub></div>
-<div class="eq">R<sub>NL</sub> = F<sub>B</sub> + F<sub>R</sub> + F<sub>M</sub> + F<sub>C</sub> - R<sub>L</sub></div>
-<div class="note">客先イナーシャがL側軸受より外側にある場合はオーバーハング荷重となる。</div>
-</section>
-
-<section class="section">
-<h2>8. クリープとの関係</h2>
-<div class="flow">各部のアンバランス荷重 → L/NL軸受反力 → 軸受輪に作用するラジアル荷重 → はめあい条件が不十分 → 相対すべり → クリープ</div>
-<p style="margin-top:16px">クリープ（Bearing Creep）は、軸受輪と軸またはハウジングのはめあい面で、軸受輪が円周方向に少しずつ移動する現象。</p>
-<div class="note">アンバランス荷重があるから必ずクリープが発生するわけではない。荷重、回転荷重かどうか、はめあい、材質、温度などを合わせて評価する。</div>
-</section>
-
-<section class="section">
-<h2>9. 簡易計算</h2>
+<h2>9. 自動計算</h2>
 <div class="controls">
-<div><label>ブレーキ荷重 F_B [N]</label><input id="fb" type="number" step="0.01" value="0"></div>
-<div><label>ローター荷重 F_R [N]</label><input id="fr" type="number" step="0.01" value="0"></div>
-<div><label>磁気荷重 F_M [N]</label><input id="fm" type="number" step="0.01" value="0"></div>
-<div><label>客先荷重 F_C [N]</label><input id="fc" type="number" step="0.01" value="0"></div>
-<div><label>両軸受間距離 L_B [m]</label><input id="lb" type="number" step="0.001" value="0.2"></div>
-<div><label>ブレーキ位置 x_B [m]</label><input id="xb" type="number" step="0.001" value="0.05"></div>
-<div><label>ローター位置 x_R [m]</label><input id="xr" type="number" step="0.001" value="0.10"></div>
-<div><label>磁気荷重位置 x_M [m]</label><input id="xm" type="number" step="0.001" value="0.10"></div>
-<div><label>客先位置 x_C [m]</label><input id="xc" type="number" step="0.001" value="0.24"></div>
+<div><label>負荷イナーシャ J_L [kg·m²]</label><input id="jl" type="number" step="0.000001" value="0.00015"></div>
+<div><label>軸端径 d [mm]</label><input id="d" type="number" step="0.1" value="14"></div>
+<div><label>客先負荷長さ L [mm]</label><input id="len" type="number" step="0.1" value="20"></div>
+<div><label>密度 ρ [kg/m³]</label><input id="rho" type="number" step="1" value="7860"></div>
+<div><label>回転速度 N [min⁻¹]</label><input id="rpm" type="number" step="100" value="5000"></div>
+<div><label>釣り合い等級 G [mm/s]</label><input id="g" type="number" step="0.1" value="6.3"></div>
+<div><label>ローター不釣り合い量 U [g·cm]</label><input id="u" type="number" step="0.1" value="3"></div>
+<div><label>磁気アンバランス F₃ [N]</label><input id="f3" type="number" step="0.01" value="6.37"></div>
+<div><label>ブレーキ質量 M_B [kg]</label><input id="mb" type="number" step="0.00001" value="0.04615"></div>
+<div><label>l₁ [mm]</label><input id="l1" type="number" step="0.01" value="42.5"></div>
+<div><label>l₂ [mm]</label><input id="l2" type="number" step="0.01" value="15.65"></div>
+<div><label>l₃ [mm]</label><input id="l3" type="number" step="0.01" value="24.65"></div>
+<div><label>l₄ [mm]</label><input id="l4" type="number" step="0.01" value="33.65"></div>
+<div><label>l₅ [mm]</label><input id="l5" type="number" step="0.01" value="50.5"></div>
+<div><label>l₇ [mm]</label><input id="l7" type="number" step="0.01" value="77.8"></div>
 </div>
+
 <div class="results">
-<div class="result">L側軸受反力 R_L<b id="rl">-</b><span class="small">N</span></div>
-<div class="result">NL側軸受反力 R_NL<b id="rnl">-</b><span class="small">N</span></div>
+<div class="result">客先負荷外径 D<b id="outD">-</b><span class="small">mm</span></div>
+<div class="result">客先負荷質量 M<sub>C</sub><b id="outMc">-</b><span class="small">kg</span></div>
+<div class="result">F₁<b id="outF1">-</b><span class="small">N</span></div>
+<div class="result">F₂ = F₄<b id="outF2">-</b><span class="small">N</span></div>
+<div class="result">F₅<b id="outF5">-</b><span class="small">N</span></div>
+<div class="result">F<sub>NL</sub><b id="outFnl">-</b><span class="small">N</span></div>
+<div class="result">F<sub>L</sub><b id="outFl">-</b><span class="small">N</span></div>
 </div>
-<p class="small">※ 各荷重を同一方向に作用する瞬間値として簡略計算。位相差を考慮する場合はベクトル合成が必要。</p>
+<p class="small">※ 各荷重を同一方向に作用する瞬間値として扱う簡易モデル。位相差を考慮する場合はベクトル合成が必要。</p>
 </section>
 
 <section class="section">
-<h2>10. 全体の流れ</h2>
-<div class="flow">既知仕様 → 各部の質量・形状 → アンバランス荷重 → 作用位置 → 力の釣り合い → モーメントの釣り合い → L/NL軸受反力 → クリープ検討</div>
+<h2>10. クリープとの関係</h2>
+<div class="flow">アンバランス荷重 → 軸受荷重 F<sub>L</sub>・F<sub>NL</sub> → 軸受輪にラジアル荷重 → はめあい条件が不十分 → はめあい面で相対すべり → クリープ</div>
+<p style="margin-top:16px">クリープ（Bearing Creep）とは、軸受輪と軸またはハウジングのはめあい面で、軸受輪が円周方向に少しずつ移動する現象。</p>
+<div class="note">アンバランス荷重があるから必ずクリープが発生するわけではない。実際には、荷重の大きさ、回転荷重かどうか、はめあい、材質、温度などを合わせて評価する。</div>
 </section>
 
 <footer>学習・説明用の簡易モデル。実設計では対象モーター、軸受、はめあい、支持条件、メーカー基準に従って評価する。</footer>
 </main>
 
 <script>
-const ids=["fb","fr","fm","fc","lb","xb","xr","xm","xc"];
-const els=Object.fromEntries(ids.map(id=>[id,document.getElementById(id)]));
-const rl=document.getElementById("rl");
-const rnl=document.getElementById("rnl");
+const ids=["jl","d","len","rho","rpm","g","u","f3","mb","l1","l2","l3","l4","l5","l7"];
+const el=Object.fromEntries(ids.map(id=>[id,document.getElementById(id)]));
 function calc(){
-  const v=Object.fromEntries(ids.map(id=>[id,parseFloat(els[id].value)||0]));
-  if(v.lb===0){rl.textContent="-";rnl.textContent="-";return;}
-  const RL=(v.fb*v.xb+v.fr*v.xr+v.fm*v.xm+v.fc*v.xc)/v.lb;
-  const RNL=v.fb+v.fr+v.fm+v.fc-RL;
-  rl.textContent=RL.toFixed(3);
-  rnl.textContent=RNL.toFixed(3);
+  const jl=parseFloat(el.jl.value)||0;
+  const d_mm=parseFloat(el.d.value)||0;
+  const L_mm=parseFloat(el.len.value)||0;
+  const rho=parseFloat(el.rho.value)||0;
+  const rpm=parseFloat(el.rpm.value)||0;
+  const G_mm_s=parseFloat(el.g.value)||0;
+  const U_gcm=parseFloat(el.u.value)||0;
+  const F3=parseFloat(el.f3.value)||0;
+  const MB=parseFloat(el.mb.value)||0;
+  const l1=parseFloat(el.l1.value)||0, l2=parseFloat(el.l2.value)||0, l3=parseFloat(el.l3.value)||0;
+  const l4=parseFloat(el.l4.value)||0, l5=parseFloat(el.l5.value)||0, l7=parseFloat(el.l7.value)||0;
+  if(!(jl>0&&d_mm>0&&L_mm>0&&rho>0&&rpm>0&&l7>0)) return;
+
+  const d=d_mm/1000, L=L_mm/1000, omega=2*Math.PI*rpm/60, G=G_mm_s/1000;
+  const D=Math.pow((32*jl)/(Math.PI*L*rho)+Math.pow(d,4),0.25);
+  const MC=(Math.PI*L*rho/4)*(D*D-d*d);
+  const F1=MC*G*omega;
+  const U=U_gcm*1e-5;
+  const F2=U*omega*omega;
+  const F4=F2;
+  const F5=MB*G*omega;
+  const FNL=(F2*l2+F3*l3+F4*l4+F5*l5-F1*l1)/l7;
+  const FL=F1+F2+F3+F4+F5-FNL;
+
+  outD.textContent=(D*1000).toFixed(2);
+  outMc.textContent=MC.toFixed(3);
+  outF1.textContent=F1.toFixed(3);
+  outF2.textContent=F2.toFixed(3);
+  outF5.textContent=F5.toFixed(3);
+  outFnl.textContent=FNL.toFixed(3);
+  outFl.textContent=FL.toFixed(3);
 }
-ids.forEach(id=>els[id].addEventListener("input",calc));
+ids.forEach(id=>el[id].addEventListener("input",calc));
 calc();
 </script>
 </body>
